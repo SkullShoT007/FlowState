@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Englebert&family=Lekton:ital,wght@0,400;0,700;1,400&family=Michroma&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rowdies:wght@300;400;700&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+*{
+  
+  font-family: "Source Code Pro", monospace;
+  font-optical-sizing: auto;
+  
+  font-style: normal;
+}
+main{
+  min-height: 100vh;
+}
+
+.addbtn{
+  transition: 2s;
+}
+
+.addbtn:hover {
+  
+  transform: rotate(360deg);
+}
