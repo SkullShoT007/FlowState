@@ -10,7 +10,7 @@ export const HabitManager = () => {
             <div>
                 <button className='my-7'><i class=" p-2 text-5xl bi bi-patch-plus-fill w-10"></i></button>
             </div>
-            <div className="flex justify-start flex-wrap">
+            <div className="flex justify-start flex-wrap items-start">
                 <Card />
                 <Card />
                 <Card />
