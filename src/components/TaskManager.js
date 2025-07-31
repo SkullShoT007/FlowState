@@ -1,5 +1,5 @@
 import { Card } from "./Card"
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { add } from "./store/taskSlice";
 export const TaskManager = () => {
@@ -7,7 +7,7 @@ export const TaskManager = () => {
   const taskList = useSelector(state => state.taskState.taskList);
   const dispatch = useDispatch()
 
-  const [tasks,setTasks] = useState([])
+  
   const titleRef = useRef()
   const descRef = useRef()
 
@@ -29,6 +29,7 @@ export const TaskManager = () => {
     const title = titleRef.current.value;
     const desc = descRef.current.value;
     const task = {
+      id: Math.floor(Math.random() * 9000) + 1000,
       title: title,
       description: desc
     }
@@ -67,8 +68,6 @@ export const TaskManager = () => {
             <input maxLength={100} ref = {descRef}  className="h-10 w-56 text-center text-lightGray border border-mainGray" type="text" placeholder="description"/>
             <button className="p-2 w-40 bg-myBlue" type = "submit">AddTask</button>
           </form>
-          
-          
         </div>
       </div>
 
