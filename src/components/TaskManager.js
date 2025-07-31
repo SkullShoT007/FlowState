@@ -1,10 +1,16 @@
 import { Card } from "./Card"
 import { useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { add } from "./store/taskSlice";
 export const TaskManager = () => {
+
+  const taskList = useSelector(state => state.taskState.taskList);
+  const dispatch = useDispatch()
 
   const [tasks,setTasks] = useState([])
   const titleRef = useRef()
   const descRef = useRef()
+
   function toggleModal(value) {
     const modal = document.getElementById("myModal");
     if (value === 1) {
@@ -15,6 +21,7 @@ export const TaskManager = () => {
       modal.classList.remove("flex");
     }
   }
+
   function taskSubmit(event)
   {
     event.preventDefault()
@@ -25,8 +32,8 @@ export const TaskManager = () => {
       title: title,
       description: desc
     }
-    setTasks(state => [...state, task]);
-    console.log(task)
+    dispatch(add(task))
+    
     titleRef.current.value = "";
     descRef.current.value = ""
     
@@ -66,7 +73,7 @@ export const TaskManager = () => {
       </div>
 
       <div className="flex justify-start flex-wrap">
-        {tasks.map((task, index) => (
+        {taskList.map((task, index) => (
           <Card key = {index} task = {task}/>
         ))}
       </div>
