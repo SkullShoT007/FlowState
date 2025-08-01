@@ -2,7 +2,7 @@ import { useState } from "react";
 import { remove, update } from "./store/taskSlice";
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
-export const Card = ({task}) => {
+export const TaskCard = ({task}) => {
   const [complete, setComplete] = useState(false)
   const dispatch = useDispatch()
   const titleRef = useRef()

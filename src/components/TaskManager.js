@@ -1,4 +1,4 @@
-import { Card } from "./Card"
+import { TaskCard } from "./TaskCard"
 import { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { add } from "./store/taskSlice";
@@ -73,7 +73,7 @@ export const TaskManager = () => {
 
       <div className="flex justify-start flex-wrap">
         {taskList.map((task, index) => (
-          <Card key = {index} task = {task}/>
+          <TaskCard key = {index} task = {task}/>
         ))}
       </div>
     </div>

@@ -1,6 +1,6 @@
 const {createSlice} = require("@reduxjs/toolkit")
 
-const taskSlice = createSlice({
+const taskslice = createSlice({
     name: "tasks",
     initialState: {
         taskList: []
@@ -9,6 +9,7 @@ const taskSlice = createSlice({
         add(state, action)
         {
             const updatedTaskList = state.taskList.concat(action.payload)
+            
             return{...state, taskList: updatedTaskList}
         },
         remove(state, action)
@@ -31,5 +32,5 @@ const taskSlice = createSlice({
     }
 })
 
-export const {add, remove, update} = taskSlice.actions;
-export const taskReducer = taskSlice.reducer;
+export const {add, remove, update} = taskslice.actions;
+export const taskReducer = taskslice.reducer;
