@@ -10,7 +10,7 @@ export const HabitManager = () => {
   
   const titleRef = useRef()
   const descRef = useRef()
-
+  const typeRef = useRef()
   function toggleModal(value) {
     const modal = document.getElementById("habitModal");
     if (value === 1) {
@@ -28,9 +28,11 @@ export const HabitManager = () => {
     toggleModal(0);
     const title = titleRef.current.value;
     const desc = descRef.current.value;
+    const type = typeRef.current.value;
     const habit = {
       id: Math.floor(Math.random() * 9000) + 1000,
       title: title,
+      type: type,
       description: desc
     }
     dispatch(add(habit))
@@ -64,9 +66,13 @@ export const HabitManager = () => {
           <button onClick={() => toggleModal(0)} className="absolute top-2 right-2 text-gray-600 text-xl ">
             <i className="text-5xl bi bi-x-circle-fill"></i>
           </button>
-          <form onSubmit={habitSubmit} className="flex flex-col justify-start gap-5 h-full">
+          <form onSubmit={habitSubmit} className="flex flex-col justify-start gap-5 h-full text-lightGray">
             <input maxLength={20} ref = {titleRef}  className="h-10 w-56 text-center text-lightGray border border-mainGray" type="text" placeholder="enter habit name"/>
             <input maxLength={100} ref = {descRef}  className="h-10 w-56 text-center text-lightGray border border-mainGray" type="text" placeholder="description"/>
+            <select ref = {typeRef} name="habit-type" id="">
+              <option value="good">Good Habit</option>
+              <option value="bad">Bad Habit</option>
+            </select>
             <button className="p-2 w-40 bg-myBlue" type = "submit">Add Habit</button>
           </form>
         </div>

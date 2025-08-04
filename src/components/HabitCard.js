@@ -7,6 +7,7 @@ export const HabitCard = ({habit}) => {
   const dispatch = useDispatch()
   const titleRef = useRef()
     const descRef = useRef()
+    const typeRef = useRef()
     
   function markCompleted()
   {
@@ -22,10 +23,12 @@ export const HabitCard = ({habit}) => {
   toggleModal(0);
   const title = titleRef.current.value;
   const desc = descRef.current.value;
+  const type = typeRef.current.value;
 
   const updatedhabit = {
     id: habit.id, // this comes from the `props.habit.id`, which is correct
-    title,
+    title: title,
+    type: type,
     description: desc,
   };
 
@@ -52,6 +55,7 @@ export const HabitCard = ({habit}) => {
             <h1 className={`text-4xl text-center  ${complete? (" bg-green-400 ") : (" bg-myBlue ")}rounded p-2 text-wrap break-words`}>{habit.title} </h1>
             <i onClick={()=>toggleModal(1)} className="bi bi-pencil absolute top-0 right-0 text-white cursor-pointer m-1"></i>
             <p className=' text-center mt-2 p-2 text-wrap break-words'>{habit.description}</p>
+            <p>{habit.type}</p>
         </div>
         <div className="flex">
             <button onClick={markCompleted} className={`w-full ${complete? "bg-red-600" : "bg-green-400"}  p-2`}>{complete?"mark not complete" : ("mark Complete")}</button>
@@ -68,6 +72,10 @@ export const HabitCard = ({habit}) => {
           <form onSubmit={updatehabit} className="flex flex-col justify-start gap-5 h-full">
             <input maxLength={20} ref = {titleRef}  className="h-10 w-56 text-center text-lightGray border border-mainGray" type="text" placeholder="enter habit name"/>
             <input maxLength={100} ref = {descRef}  className="h-10 w-56 text-center text-lightGray border border-mainGray" type="text" placeholder="description"/>
+            <select ref = {typeRef} name="habit-type" id="">
+              <option value="good">Good Habit</option>
+              <option value="bad">Bad Habit</option>
+            </select>
             <button className="p-2 w-40 bg-myBlue" type = "submit">Update habit</button>
           </form>
         </div>

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { remove, update } from "./store/taskSlice";
+import {completeTask, notCompleteTask} from "./store/xpSlice"
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
 export const TaskCard = ({task}) => {
   const [complete, setComplete] = useState(false)
+  
   const dispatch = useDispatch()
   const titleRef = useRef()
     const descRef = useRef()
@@ -11,6 +13,14 @@ export const TaskCard = ({task}) => {
   function markCompleted()
   {
     setComplete(!complete)
+    dispatch(completeTask(task))
+
+  }
+  function markNotCompleted()
+  {
+    setComplete(!complete)
+    dispatch(notCompleteTask(task))
+
   }
 
   function handleDelete()
@@ -54,7 +64,7 @@ export const TaskCard = ({task}) => {
             <p className=' text-center mt-2 p-2 text-wrap break-words'>{task.description}</p>
         </div>
         <div className="flex">
-            <button onClick={markCompleted} className={`w-full ${complete? "bg-red-600" : "bg-green-400"}  p-2`}>{complete?"mark not complete" : ("mark Complete")}</button>
+            <button onClick={complete? markNotCompleted: markCompleted} className={`w-full ${complete? "bg-red-600" : "bg-green-400"}  p-2`}>{complete?"mark not complete" : ("mark Complete")}</button>
             <button onClick={handleDelete} className={`w-full bg-extraLightGray  p-2`}><i class="bi bi-archive"></i></button>
         </div>
     </div>
