@@ -1,6 +1,7 @@
 import { HabitCard } from "./HabitCard";
 import { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { XpBar } from "./XpBar";
 import { add } from "./store/habitSlice";
 export const HabitManager = () => {
 
@@ -45,6 +46,7 @@ export const HabitManager = () => {
 
   return (
     <div className='bg-mainGray w-full p-8 text-myWhite'>
+      <XpBar />
       <div>
         <button className="p-2 my-4 mx-2 bg-lightGray rounded">habit Manager</button>
         <button className="p-2 my-4 mx-2 bg-lightGray rounded">Analytics</button>

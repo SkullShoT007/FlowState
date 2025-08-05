@@ -2,6 +2,7 @@ import { useState } from "react";
 import { remove, update } from "./store/habitSlice";
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
+import {GoodHabit, BadHabit} from "./store/xpSlice"
 export const HabitCard = ({habit}) => {
   const [complete, setComplete] = useState(false)
   const dispatch = useDispatch()
@@ -9,9 +10,19 @@ export const HabitCard = ({habit}) => {
     const descRef = useRef()
     const typeRef = useRef()
     
+    
   function markCompleted()
   {
     setComplete(!complete)
+    if(habit.type === 'good')
+    {
+      dispatch(GoodHabit({xp: 50}))
+    }
+    else if(habit.type === 'bad')
+    {
+      dispatch(BadHabit({xp:50}))
+    }
+
   }
 
   function handleDelete()
@@ -26,7 +37,7 @@ export const HabitCard = ({habit}) => {
   const type = typeRef.current.value;
 
   const updatedhabit = {
-    id: habit.id, // this comes from the `props.habit.id`, which is correct
+    id: habit.id, 
     title: title,
     type: type,
     description: desc,

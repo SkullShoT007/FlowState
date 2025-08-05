@@ -15,11 +15,24 @@ const xpSlice = createSlice({
         },
         notCompleteTask(state, action)
         {
-            const updatedXp = state.experience - action.payload.difficulty;
+            const updatedXp = state.experience - Number(action.payload.difficulty);
             return {...state, experience: updatedXp}
-        }
+        },
+        GoodHabit(state, action)
+        {
+            
+            const updatedXp = state.experience + Number(action.payload.xp);
+            return {...state, experience: updatedXp}
+        },
+        BadHabit(state, action)
+        {
+            const updatedXp = state.experience - Number(action.payload.xp);
+            return {...state, experience: updatedXp}
+        },
+        
+        
     }
 })
 
-export const {completeTask, notCompleteTask} = xpSlice.actions;
+export const {completeTask, notCompleteTask, GoodHabit, BadHabit} = xpSlice.actions;
 export const xpReducer = xpSlice.reducer;
