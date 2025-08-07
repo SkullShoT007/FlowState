@@ -3,8 +3,9 @@ import { remove, update } from "./store/taskSlice";
 import {completeTask, notCompleteTask} from "./store/xpSlice"
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
+import { deleteFromDB, updateTaskInDB } from "./indexedDB/indexedDB";
 export const TaskCard = ({task}) => {
-  const [complete, setComplete] = useState(false)
+  const [complete, setComplete] = useState(task.completed | false)
   
   const dispatch = useDispatch()
   const titleRef = useRef()
@@ -14,18 +15,23 @@ export const TaskCard = ({task}) => {
   {
     setComplete(!complete)
     dispatch(completeTask(task))
-
+    update({ ...task, completed: true });
+    updateTaskInDB({...task, completed: true})
+    
   }
   function markNotCompleted()
   {
     setComplete(!complete)
     dispatch(notCompleteTask(task))
+    update({ ...task, completed: false });
+    updateTaskInDB({...task, completed: false})
 
   }
 
   function handleDelete()
   {
     dispatch(remove(task))
+    deleteFromDB(task.id)
   }
   function updateTask(e) {
   e.preventDefault();
@@ -38,6 +44,8 @@ export const TaskCard = ({task}) => {
     title,
     description: desc,
   };
+  updateTaskInDB(updatedTask)
+
 
   dispatch(update(updatedTask));
 

@@ -1,13 +1,23 @@
 import { TaskCard } from "./TaskCard"
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { XpBar } from "./XpBar";
-import { add } from "./store/taskSlice";
+import { add, setTasks } from "./store/taskSlice";
+import {addToDB} from "./indexedDB/indexedDB"
+import { getTasks } from "./indexedDB/indexedDB";
+
 export const TaskManager = () => {
 
   const taskList = useSelector(state => state.taskState.taskList);
   const dispatch = useDispatch()
+  useEffect(() => {
+    async function fetchTasks() {
+      const tasks = await getTasks();
+      dispatch(setTasks(tasks));
+    }
 
+    fetchTasks();
+  }, [dispatch]);
   
   const titleRef = useRef()
   const descRef = useRef()
@@ -34,8 +44,10 @@ export const TaskManager = () => {
       id: Math.floor(Math.random() * 9000) + 1000,
       title: title,
       description: desc,
-      difficulty: diff
+      difficulty: diff,
+      completed: false
     }
+    addToDB(task)
     dispatch(add(task))
     console.log(task)
     titleRef.current.value = "";
