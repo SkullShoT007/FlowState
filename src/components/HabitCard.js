@@ -24,6 +24,19 @@ export const HabitCard = ({habit}) => {
     }
 
   }
+  function markNotCompleted()
+  {
+    setComplete(!complete)
+    if(habit.type === 'good')
+    {
+      dispatch(GoodHabit({xp: -50}))
+    }
+    else if(habit.type === 'bad')
+    {
+      dispatch(BadHabit({xp:50}))
+    }
+  }
+
 
   function handleDelete()
   {
@@ -69,7 +82,7 @@ export const HabitCard = ({habit}) => {
             <p>{habit.type}</p>
         </div>
         <div className="flex">
-            <button onClick={markCompleted} className={`w-full ${complete? "bg-red-600" : "bg-green-400"}  p-2`}>{complete?"mark not complete" : ("mark Complete")}</button>
+            <button onClick={complete ?markNotCompleted :markCompleted} className={`w-full ${complete? "bg-red-600" : "bg-green-400"}  p-2`}>{complete?"mark not complete" : ("mark Complete")}</button>
             <button onClick={handleDelete} className={`w-full bg-extraLightGray  p-2`}><i class="bi bi-archive"></i></button>
         </div>
     </div>
