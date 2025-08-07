@@ -3,7 +3,7 @@ import { remove, update } from "./store/taskSlice";
 import {completeTask, notCompleteTask} from "./store/xpSlice"
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
-import { deleteFromDB, updateTaskInDB } from "./indexedDB/indexedDB";
+import { deleteFromDB, updateTaskInDB } from "./indexedDB/TaskDB";
 export const TaskCard = ({task}) => {
   const [complete, setComplete] = useState(task.completed | false)
   

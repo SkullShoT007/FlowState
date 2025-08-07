@@ -1,12 +1,21 @@
 import { HabitCard } from "./HabitCard";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { XpBar } from "./XpBar";
-import { add } from "./store/habitSlice";
+import { add, setHabits } from "./store/habitSlice";
+import { addToDB, gethabits } from "./indexedDB/HabitDB";
 export const HabitManager = () => {
 
   const habitList = useSelector(state => state.habitState.habitList);
   const dispatch = useDispatch()
+  useEffect(() => {
+      async function fetchHabits() {
+        const tasks = await gethabits();
+        dispatch(setHabits(tasks));
+      }
+  
+      fetchHabits();
+    }, [dispatch]);
   console.log(habitList)
   
   const titleRef = useRef()
@@ -34,8 +43,10 @@ export const HabitManager = () => {
       id: Math.floor(Math.random() * 9000) + 1000,
       title: title,
       type: type,
-      description: desc
+      description: desc,
+      completed: false
     }
+    addToDB(habit)
     dispatch(add(habit))
     
     

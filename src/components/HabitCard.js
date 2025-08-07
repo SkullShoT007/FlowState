@@ -3,8 +3,9 @@ import { remove, update } from "./store/habitSlice";
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
 import {GoodHabit, BadHabit} from "./store/xpSlice"
+import { deleteFromDB, updatehabitInDB } from "./indexedDB/HabitDB";
 export const HabitCard = ({habit}) => {
-  const [complete, setComplete] = useState(false)
+  const [complete, setComplete] = useState(habit.completed || false)
   const dispatch = useDispatch()
   const titleRef = useRef()
     const descRef = useRef()
@@ -17,10 +18,12 @@ export const HabitCard = ({habit}) => {
     if(habit.type === 'good')
     {
       dispatch(GoodHabit({xp: 50}))
+      updatehabitInDB({...habit, completed: true})
     }
     else if(habit.type === 'bad')
     {
       dispatch(BadHabit({xp:50}))
+      updatehabitInDB({...habit, completed: true})
     }
 
   }
@@ -30,10 +33,12 @@ export const HabitCard = ({habit}) => {
     if(habit.type === 'good')
     {
       dispatch(GoodHabit({xp: -50}))
+      updatehabitInDB({...habit, completed: false})
     }
     else if(habit.type === 'bad')
     {
       dispatch(BadHabit({xp:50}))
+      updatehabitInDB({...habit, completed: false})
     }
   }
 
@@ -41,6 +46,8 @@ export const HabitCard = ({habit}) => {
   function handleDelete()
   {
     dispatch(remove(habit))
+    deleteFromDB(habit.id)
+
   }
   function updatehabit(e) {
   e.preventDefault();

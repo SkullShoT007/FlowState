@@ -1,4 +1,4 @@
-import { updateTaskInDB } from "../indexedDB/indexedDB";
+import { updateTaskInDB } from "../indexedDB/TaskDB";
 
 const {createSlice} = require("@reduxjs/toolkit")
 
@@ -21,19 +21,18 @@ const taskslice = createSlice({
             return {...state, taskList: updatedTaskList}
         },
         update(state, action) {
-    const updatedTask = action.payload;
-    console.log("Reducer received update:", updatedTask.id);
-    console.log("Current state IDs:", state.taskList.map(t => t.id));
+            const updatedTask = action.payload;
+            console.log("Reducer received update:", updatedTask.id);
+            console.log("Current state IDs:", state.taskList.map(t => t.id));
 
-    state.taskList = state.taskList.map(task => {
-        if (task.id === updatedTask.id) {
-            updateTaskInDB(updatedTask); // only call DB update when task is updated
-            return updatedTask;
-        }
-        return task;
-    });
-}
-,
+            state.taskList = state.taskList.map(task => {
+                if (task.id === updatedTask.id) {
+                    updateTaskInDB(updatedTask); // only call DB update when task is updated
+                    return updatedTask;
+                }
+                return task;
+            });
+        },
         setTasks(state, action) 
         {
         state.taskList = action.payload;

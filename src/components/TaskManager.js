@@ -3,8 +3,8 @@ import { useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { XpBar } from "./XpBar";
 import { add, setTasks } from "./store/taskSlice";
-import {addToDB} from "./indexedDB/indexedDB"
-import { getTasks } from "./indexedDB/indexedDB";
+
+import {addToDB,getTasks } from "./indexedDB/TaskDB";
 
 export const TaskManager = () => {
 
