@@ -27,8 +27,8 @@ const fakeDistractionData = [
 
 export const DistractionTimeline = () => {
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-lg font-semibold mb-4">Distraction Timeline</h2>
+    <div className="bg-darkGray rounded-lg shadow p-6">
+      <h2 className="text-lg font-semibold mb-4 text-myWhite">Distraction Timeline</h2>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={fakeDistractionData}>
           <CartesianGrid strokeDasharray="3 3" />

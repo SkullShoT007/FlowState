@@ -34,8 +34,8 @@ export const XpProgressionChart = () => {
   });
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-lg font-semibold mb-4">
+    <div className="bg-darkGray p-6 rounded-lg shadow-md">
+      <h2 className="text-lg font-semibold mb-4 text-myWhite">
         XP Progression Over Time (Level {userProfile.currentLevel})
       </h2>
       <ResponsiveContainer width="100%" height={300}>

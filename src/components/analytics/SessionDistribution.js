@@ -15,8 +15,8 @@ const fakeData = [
 
 export const SessionDistribution = () => {
   return (
-    <div className="w-full bg-white rounded-lg shadow p-4 h-full">
-      <h2 className="text-xl font-semibold text-center">Session Distribution</h2>
+    <div className="w-full bg-darkGray rounded-lg shadow p-4 h-full">
+      <h2 className="text-xl font-semibold text-center text-white">Session Distribution</h2>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie

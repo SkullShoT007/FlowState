@@ -38,10 +38,10 @@ export const StreakandGoal = () => {
   ];
 
   return (
-    <div className=" bg-white rounded-lg shadow">
+    <div className=" bg-darkGray rounded-lg shadow p-4">
       {/* Streak Radial Chart */}
       <div className="flex flex-col items-center">
-        <h2 className="text-lg font-semibold mb-4">Current Streak</h2>
+        <h2 className="text-lg font-semibold mb-4 text-myWhite">Current Streak</h2>
         <ResponsiveContainer width={200} height={200}>
           <RadialBarChart
             cx="50%"
@@ -75,7 +75,7 @@ export const StreakandGoal = () => {
 
       {/* Goal Progress Bar */}
       <div className="flex flex-col items-center">
-        <h2 className="text-lg font-semibold mb-4">Goal Progress</h2>
+        <h2 className="text-lg font-semibold mb-4 text-myWhite">Goal Progress</h2>
         <ResponsiveContainer width="100%" height={100}>
           <BarChart data={goalData} layout="vertical" margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
