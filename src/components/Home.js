@@ -8,9 +8,9 @@ export const Home = () => {
   return (
     <main className="flex">
       
-      <Sidebar  btn = {btn} setBtn = {setBtn}/>
       
-      {btn ? (<TaskManager />) : (<HabitManager />)}
+      
+      
       
     </main>
   )

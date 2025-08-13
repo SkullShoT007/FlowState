@@ -1,10 +1,12 @@
 import './App.css';
-import { Home } from './components/Home';
 
+import { Sidebar } from './components/Sidebar';
+import { AllRoutes } from './components/routes/AllRoutes';
 function App() {
   return (
-    <div className="App">
-        <Home />
+    <div className="App flex bg-lightGray">
+      <Sidebar  />
+        <AllRoutes />
     </div>
   );
 }
