@@ -12,8 +12,8 @@ export const Sidebar = () => {
         <div className="flex flex-col mt-10">
             <NavLink to ="tasks"><button  className= {`p-2 my-2  rounded`}>Tasks</button></NavLink>
             <NavLink to = "habits"><button  className= {`p-2 my-2  rounded`}>Habits</button></NavLink>
+            <NavLink to = "pomodoro"><button  className= {`p-2 my-2  rounded`}>Pomodoro</button></NavLink>
             <NavLink to = "analytics"><button  className= {`p-2 my-2  rounded`}>Analytics</button></NavLink>
-            
         </div>
     </div>
   )
