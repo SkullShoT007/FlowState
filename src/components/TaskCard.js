@@ -65,7 +65,7 @@ export const TaskCard = ({task}) => {
   }
   return (
     <>
-      <div className={`flex flex-col min-h-48 justify-between w-80 rounded  m-8 bg-darkGray `}>
+      {/* <div className={`flex flex-col min-h-48 justify-between w-80 rounded  m-8 bg-darkGray `}>
         <div className="relative">
             <h1 className={`text-4xl text-center  ${complete? (" bg-green-400 ") : (" bg-myBlue ")}rounded p-2 text-wrap break-words`}>{task.title} </h1>
             <i onClick={()=>toggleModal(1)} className="bi bi-pencil absolute top-0 right-0 text-white cursor-pointer m-1"></i>
@@ -75,6 +75,11 @@ export const TaskCard = ({task}) => {
             <button onClick={complete? markNotCompleted: markCompleted} className={`w-full ${complete? "bg-red-600" : "bg-green-400"}  p-2`}>{complete?"mark not complete" : ("mark Complete")}</button>
             <button onClick={handleDelete} className={`w-full bg-extraLightGray  p-2`}><i class="bi bi-archive"></i></button>
         </div>
+    </div> */}
+
+    <div className="flex justify-between w-full h-10 bg-darkGray rounded bg-mainGray mt-2">
+      <button onClick={markCompleted} className="bg-green-300 px-4">+</button>
+        <h1 className="text-center m-auto">{task.title}</h1>
     </div>
      <div id="updateModal" className="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         

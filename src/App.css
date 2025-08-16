@@ -18,3 +18,7 @@ main{
   
   transform: rotate(360deg);
 }
+
+.habit-form:active{
+  
+}
