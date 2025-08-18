@@ -4,7 +4,14 @@ import {completeTask, notCompleteTask} from "./store/xpSlice"
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
 import { deleteFromDB, updateTaskInDB } from "./indexedDB/TaskDB";
+import { useSortable } from "@dnd-kit/sortable";
+import {CSS} from "@dnd-kit/utilities"
 export const TaskCard = ({task}) => {
+  const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id: task.id})
+  const style = {
+    
+    transform: CSS.Transform.toString(transform)
+  }
   const [complete, setComplete] = useState(task.completed | false)
   
   const dispatch = useDispatch()
@@ -78,16 +85,20 @@ export const TaskCard = ({task}) => {
         </div>
     </div> */}
 
-    <div className="group flex justify-between w-full h-10 hover:h-16 transition-all bg-darkGray rounded bg-mainGray mt-2">
-      
-      <button onClick={markCompleted} className="bg-green-300 px-4">+</button>
-        <h1 className="text-center m-auto">{task.title}</h1>
-        <div className="flex flex-col opacity-0 group-hover:opacity-100 transition">
-             <i onClick = {()=>toggleModal(1)}className="bi bi-pencil-square p-1"></i>
-              <i onClick = {handleDelete} className="bi bi-trash3-fill p-1"></i>
-        </div>
-       
-    </div>
+    <div style={style} ref={setNodeRef} {...attributes} className="group flex justify-between w-full h-10 hover:h-16 transition-all bg-darkGray rounded bg-mainGray mt-2">
+  
+  <button onClick={markCompleted} className="bg-green-300 px-4">+</button>
+
+  
+  <h1 className="text-center m-auto cursor-grab active:cursor-grabbing"  {...listeners}>
+    {task.title}
+  </h1>
+
+  <div className="flex flex-col opacity-0 group-hover:opacity-100 transition">
+    <i onClick={() => toggleModal(1)} className="bi bi-pencil-square p-1 cursor-pointer"></i>
+    <i onClick={handleDelete} className="bi bi-trash3-fill p-1 cursor-pointer"></i>
+  </div>
+</div>
      <div id={`updateModal-${task.id}`} className="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         
         <div className="bg-white rounded-lg shadow-lg p-6 relative w-96">
