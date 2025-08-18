@@ -15,7 +15,8 @@ export const TaskCard = ({task}) => {
   {
     setComplete(!complete)
     dispatch(completeTask(task))
-    update({ ...task, completed: true });
+    console.log(task)
+    dispatch(update({ ...task, completed: true }));
     updateTaskInDB({...task, completed: true})
     
   }
@@ -23,7 +24,7 @@ export const TaskCard = ({task}) => {
   {
     setComplete(!complete)
     dispatch(notCompleteTask(task))
-    update({ ...task, completed: false });
+    dispatch(update({ ...task, completed: false }));
     updateTaskInDB({...task, completed: false})
 
   }
@@ -37,12 +38,12 @@ export const TaskCard = ({task}) => {
   e.preventDefault();
   toggleModal(0);
   const title = titleRef.current.value;
-  const desc = descRef.current.value;
+  
 
   const updatedTask = {
-    id: task.id, // this comes from the `props.task.id`, which is correct
-    title,
-    description: desc,
+    id: task.id,
+    title: title,
+    difficulty: task.difficulty,
   };
   updateTaskInDB(updatedTask)
 
@@ -50,11 +51,11 @@ export const TaskCard = ({task}) => {
   dispatch(update(updatedTask));
 
   titleRef.current.value = "";
-  descRef.current.value = "";
+  
 }
 
   function toggleModal(value) {
-    const modal = document.getElementById("updateModal");
+    const modal = document.getElementById(`updateModal-${task.id}`);
     if (value === 1) {
       modal.classList.remove("hidden");
       modal.classList.add("flex");
@@ -73,15 +74,21 @@ export const TaskCard = ({task}) => {
         </div>
         <div className="flex">
             <button onClick={complete? markNotCompleted: markCompleted} className={`w-full ${complete? "bg-red-600" : "bg-green-400"}  p-2`}>{complete?"mark not complete" : ("mark Complete")}</button>
-            <button onClick={handleDelete} className={`w-full bg-extraLightGray  p-2`}><i class="bi bi-archive"></i></button>
+            <button onClick={handleDelete} className={`w-full bg-extraLightGray  p-2`}><i className="bi bi-archive"></i></button>
         </div>
     </div> */}
 
-    <div className="flex justify-between w-full h-10 bg-darkGray rounded bg-mainGray mt-2">
+    <div className="group flex justify-between w-full h-10 hover:h-16 transition-all bg-darkGray rounded bg-mainGray mt-2">
+      
       <button onClick={markCompleted} className="bg-green-300 px-4">+</button>
         <h1 className="text-center m-auto">{task.title}</h1>
+        <div className="flex flex-col opacity-0 group-hover:opacity-100 transition">
+             <i onClick = {()=>toggleModal(1)}className="bi bi-pencil-square p-1"></i>
+              <i onClick = {handleDelete} className="bi bi-trash3-fill p-1"></i>
+        </div>
+       
     </div>
-     <div id="updateModal" className="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+     <div id={`updateModal-${task.id}`} className="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         
         <div className="bg-white rounded-lg shadow-lg p-6 relative w-96">
           
@@ -90,7 +97,7 @@ export const TaskCard = ({task}) => {
           </button>
           <form onSubmit={updateTask} className="flex flex-col justify-start gap-5 h-full">
             <input maxLength={20} ref = {titleRef}  className="h-10 w-56 text-center text-lightGray border border-mainGray" type="text" placeholder="enter task name"/>
-            <input maxLength={100} ref = {descRef}  className="h-10 w-56 text-center text-lightGray border border-mainGray" type="text" placeholder="description"/>
+            
             <button className="p-2 w-40 bg-myBlue" type = "submit">Update Task</button>
           </form>
         </div>

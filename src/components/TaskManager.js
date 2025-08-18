@@ -5,7 +5,7 @@ import { XpBar } from "./XpBar";
 import { add, setTasks } from "./store/taskSlice";
 
 import {addToDB,getTasks } from "./indexedDB/TaskDB";
-import { type } from "@testing-library/user-event/dist/type";
+
 
 export const TaskManager = () => {
 
@@ -21,9 +21,7 @@ export const TaskManager = () => {
     fetchTasks();
   }, [dispatch]);
   
-  const titleRef = useRef()
-  const qtitleRef = useRef()
-  const descRef = useRef()
+  const titleRef = useRef()  
   const typeRef = useRef()
   
 
@@ -58,10 +56,10 @@ export const TaskManager = () => {
         <form
       className="habit-form flex flex-col items-center"
       onSubmit={taskSubmit}
-      onFocus={() => setExpanded(true)} // expand when any child gets focus
+      onFocus={() => setExpanded(true)} 
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
-          // focus moved completely outside form
+          
           if (!titleRef.current.value) setExpanded(false);
         }
       }}
@@ -86,8 +84,8 @@ export const TaskManager = () => {
         </select>
       )}
     </form>
-        {taskList.map((task, index) => (
-          <TaskCard key = {index} task = {task}/>
+        {taskList.map((task) => (
+          <TaskCard key = {task.id} task = {task}/>
         ))}
     {taskList.map}
       </div>
