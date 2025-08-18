@@ -1,11 +1,19 @@
 import { useState } from "react";
 import { remove, update } from "./store/habitSlice";
+import {GoodHabit, BadHabit} from "./store/xpSlice"
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
-import {GoodHabit, BadHabit} from "./store/xpSlice"
-import { deleteFromDB, updatehabitInDB } from "./indexedDB/HabitDB";
+import { deleteFromDB, updateHabitInDB } from "./indexedDB/HabitDB";
+import { useSortable } from "@dnd-kit/sortable";
+import {CSS} from "@dnd-kit/utilities"
 export const HabitCard = ({habit}) => {
+  const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id: habit.id})
+  const style = {
+    
+    transform: CSS.Transform.toString(transform)
+  }
   const [complete, setComplete] = useState(habit.completed || false)
+  
   const dispatch = useDispatch()
   const titleRef = useRef()
     const descRef = useRef()
@@ -18,12 +26,14 @@ export const HabitCard = ({habit}) => {
     if(habit.type === 'good')
     {
       dispatch(GoodHabit({xp: 50}))
-      updatehabitInDB({...habit, completed: true})
+      dispatch(update({ ...habit, completed: true }));
+      updateHabitInDB({...habit, completed: true})
     }
     else if(habit.type === 'bad')
     {
       dispatch(BadHabit({xp:50}))
-      updatehabitInDB({...habit, completed: true})
+      dispatch(update({ ...habit, completed: true }));
+      updateHabitInDB({...habit, completed: true})
     }
 
   }
@@ -33,12 +43,14 @@ export const HabitCard = ({habit}) => {
     if(habit.type === 'good')
     {
       dispatch(GoodHabit({xp: -50}))
-      updatehabitInDB({...habit, completed: false})
+      dispatch(update({ ...habit, completed: false }));
+      updateHabitInDB({...habit, completed: false})
     }
     else if(habit.type === 'bad')
     {
       dispatch(BadHabit({xp:50}))
-      updatehabitInDB({...habit, completed: false})
+      dispatch(update({ ...habit, completed: false }));
+      updateHabitInDB({...habit, completed: false})
     }
   }
 
@@ -70,7 +82,7 @@ export const HabitCard = ({habit}) => {
 }
 
   function toggleModal(value) {
-    const modal = document.getElementById("updateModal");
+    const modal = document.getElementById(`updateModal-${habit.id}`);
     if (value === 1) {
       modal.classList.remove("hidden");
       modal.classList.add("flex");
@@ -81,19 +93,21 @@ export const HabitCard = ({habit}) => {
   }
   return (
     <>
-      <div className={`flex flex-col min-h-48 justify-between w-80 rounded  m-8 bg-darkGray `}>
-        <div className="relative">
-            <h1 className={`text-4xl text-center  ${complete? (" bg-green-400 ") : (" bg-myBlue ")}rounded p-2 text-wrap break-words`}>{habit.title} </h1>
-            <i onClick={()=>toggleModal(1)} className="bi bi-pencil absolute top-0 right-0 text-white cursor-pointer m-1"></i>
-            <p className=' text-center mt-2 p-2 text-wrap break-words'>{habit.description}</p>
-            <p>{habit.type}</p>
-        </div>
-        <div className="flex">
-            <button onClick={complete ?markNotCompleted :markCompleted} className={`w-full ${complete? "bg-red-600" : "bg-green-400"}  p-2`}>{complete?"mark not complete" : ("mark Complete")}</button>
-            <button onClick={handleDelete} className={`w-full bg-extraLightGray  p-2`}><i class="bi bi-archive"></i></button>
-        </div>
-    </div>
-     <div id="updateModal" className="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div style={style} ref={setNodeRef} {...attributes} className="group flex justify-between w-full h-10 hover:h-16 transition-all bg-darkGray rounded bg-mainGray mt-2">
+  
+  <button onClick={markCompleted} className={`${habit.type === 'good' ? 'bg-green-300' : 'bg-red-300'} px-4`}>+</button>
+
+  
+  <h1 className="text-center m-auto cursor-grab active:cursor-grabbing"  {...listeners}>
+    {habit.title}
+  </h1>
+
+  <div className="flex flex-col opacity-0 group-hover:opacity-100 transition">
+    <i onClick={() => toggleModal(1)} className="bi bi-pencil-square p-1 cursor-pointer"></i>
+    <i onClick={handleDelete} className="bi bi-trash3-fill p-1 cursor-pointer"></i>
+  </div>
+</div>
+     <div id={`updateModal-${habit.id}`} className="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         
         <div className="bg-white rounded-lg shadow-lg p-6 relative w-96">
           

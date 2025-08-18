@@ -1,101 +1,114 @@
 import { HabitCard } from "./HabitCard";
-import { useRef, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { XpBar } from "./XpBar";
 import { add, setHabits } from "./store/habitSlice";
-import { addToDB, gethabits } from "./indexedDB/HabitDB";
-export const HabitManager = () => {
+import { addToDB, getHabits } from "./indexedDB/HabitDB";
+import { closestCorners, DndContext } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
-  const habitList = useSelector(state => state.habitState.habitList);
-  const dispatch = useDispatch()
-  useEffect(() => {
-      async function fetchHabits() {
-        const tasks = await gethabits();
-        dispatch(setHabits(tasks));
-      }
-  
-      fetchHabits();
-    }, [dispatch]);
-  console.log(habitList)
-  
-  const titleRef = useRef()
-  const descRef = useRef()
-  const typeRef = useRef()
-  function toggleModal(value) {
-    const modal = document.getElementById("habitModal");
-    if (value === 1) {
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-    } else if (value === 0) {
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
-    }
+
+function arrayMove(array, from, to) {
+  const updated = [...array];
+  const [movedItem] = updated.splice(from, 1);
+  updated.splice(to, 0, movedItem);
+  return updated;
+}
+export const HabitManager = () => {
+  const habitList = useSelector((state) => state.habitState.habitList);
+  const dispatch = useDispatch();
+  const [expanded, setExpanded] = useState(false);
+
+  const getHabitPos = (id) => habitList.findIndex((habit) => habit.id === id);
+
+  function handleDragEnd(event) {
+    const { active, over } = event;
+    if (!over) return; // dropped outside
+    if (active.id === over.id) return;
+
+    const originalPos = getHabitPos(active.id);
+    const newPos = getHabitPos(over.id);
+
+    const reordered = arrayMove(habitList, originalPos, newPos);
+    dispatch(setHabits(reordered));
   }
 
-  function habitSubmit(event)
-  {
-    event.preventDefault()
-    toggleModal(0);
+  useEffect(() => {
+    async function fetchHabits() {
+      const habits = await getHabits();
+      dispatch(setHabits(habits));
+    }
+    fetchHabits();
+  }, [dispatch]);
+
+  const titleRef = useRef();
+  const typeRef = useRef();
+  function habitSubmit(event) {
+    event.preventDefault();
+
     const title = titleRef.current.value;
-    const desc = descRef.current.value;
     const type = typeRef.current.value;
+
     const habit = {
       id: Math.floor(Math.random() * 9000) + 1000,
-      title: title,
+      title,
       type: type,
-      description: desc,
-      completed: false
-    }
-    addToDB(habit)
-    dispatch(add(habit))
-    
-    
+      completed: false,
+    };
+
+    addToDB(habit);
+    dispatch(add(habit));
+    console.log(habit);
+
     titleRef.current.value = "";
-    descRef.current.value = ""
-    
   }
 
   return (
-    <div className='bg-mainGray w-full p-8 text-myWhite'>
+    <div className="bg-mainGray w-full p-8 text-myWhite">
       <XpBar />
-      <div>
-        <button className="p-2 my-4 mx-2 bg-lightGray rounded">habit Manager</button>
-        <button className="p-2 my-4 mx-2 bg-lightGray rounded">Analytics</button>
-      </div>
 
-      <div className='p-2'>17 July 2026</div>
-
-      <div className="w-40">
-        <button onClick={() => toggleModal(1)} className='addbtn my-7'>
-          <i className="p-2 text-5xl bi bi-patch-plus-fill w-10"></i>
-        </button>
-      </div>
-
-      {/* Modal */}
-      <div id="habitModal" className="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+      <div className="w-80 p-2 bg-darkGray rounded">
         
-        <div className="bg-white rounded-lg shadow-lg p-6 relative w-96">
-          
-          <button onClick={() => toggleModal(0)} className="absolute top-2 right-2 text-gray-600 text-xl ">
-            <i className="text-5xl bi bi-x-circle-fill"></i>
-          </button>
-          <form onSubmit={habitSubmit} className="flex flex-col justify-start gap-5 h-full text-lightGray">
-            <input maxLength={20} ref = {titleRef}  className="h-10 w-56 text-center text-lightGray border border-mainGray" type="text" placeholder="enter habit name"/>
-            <input maxLength={100} ref = {descRef}  className="h-10 w-56 text-center text-lightGray border border-mainGray" type="text" placeholder="description"/>
-            <select ref = {typeRef} name="habit-type" id="">
+        <form
+          className="habit-form flex flex-col items-center"
+          onSubmit={habitSubmit}
+          onFocus={() => setExpanded(true)}
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget)) {
+              if (!titleRef.current.value) setExpanded(false);
+            }
+          }}
+        >
+          <input
+            ref={titleRef}
+            className={`p-2 w-full m-auto rounded bg-lightGray transition-all duration-300 ${
+              expanded ? "h-16" : "h-10"
+            }`}
+            type="text"
+            placeholder="enter habit"
+          />
+
+          {expanded && (
+            <select
+              ref={typeRef}
+              className="bg-darkGray p-2 rounded w-60 m-auto mt-2 transition-opacity duration-300"
+              name="habit-type"
+            >
               <option value="good">Good Habit</option>
               <option value="bad">Bad Habit</option>
             </select>
-            <button className="p-2 w-40 bg-myBlue" type = "submit">Add Habit</button>
-          </form>
-        </div>
-      </div>
+          )}
+        </form>
 
-      <div className="flex justify-start flex-wrap">
-        {habitList.map((habit, index) => (
-          <HabitCard key = {index} habit = {habit}/>
-        ))}
+        
+        <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
+          <SortableContext items={habitList} strategy={verticalListSortingStrategy}>
+            {habitList.map((habit) => (
+              <HabitCard key={habit.id} habit={habit} />
+            ))}
+          </SortableContext>
+        </DndContext>
       </div>
     </div>
-  )
+  );
 }

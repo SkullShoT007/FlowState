@@ -11,15 +11,15 @@ export async function addToDB(habit) {
         completed: habit.completed
       });
 
-      const allhabits = await db.habits.toArray();
-      console.log("Current habits in DB:", allhabits);
+      const allHabits = await db.habits.toArray();
+      console.log("Current habits in DB:", allHabits);
     });
   } catch (error) {
     console.error("Failed to add habit:", error);
   }
 }
 
-export async function gethabits() {
+export async function getHabits() {
   try {
     const habits = await db.habits.toArray();
     console.log("All habits:", habits);
@@ -33,19 +33,19 @@ export async function gethabits() {
 export async function deleteFromDB(id) {
   try {
     await db.habits.delete(id);
-    console.log(`habit with id ${id} deleted.`);
+    console.log(`Habit with id ${id} deleted.`);
 
-    const updatedhabits = await db.habits.toArray();
-    console.log("Remaining habits:", updatedhabits);
+    const updatedHabits = await db.habits.toArray();
+    console.log("Remaining habits:", updatedHabits);
   } catch (error) {
     console.error("Failed to delete habit:", error);
   }
 }
 
-export async function updatehabitInDB(updatedhabit) {
+export async function updateHabitInDB(updatedHabit) {
   try {
-    await db.habits.put(updatedhabit); // If id exists → updates, else → adds
-    console.log("habit updated in IndexedDB:", updatedhabit);
+    await db.habits.put(updatedHabit); // If id exists → updates, else → adds
+    console.log("Habit updated in IndexedDB:", updatedHabit);
   } catch (error) {
     console.error("Failed to update habit:", error);
   }

@@ -1,3 +1,5 @@
+import { updateHabitInDB } from "../indexedDB/HabitDB";
+
 const {createSlice} = require("@reduxjs/toolkit")
 
 const habitSlice = createSlice({
@@ -19,12 +21,17 @@ const habitSlice = createSlice({
             return {...state, habitList: updatedHabitList}
         },
         update(state, action) {
-        const updatedhabit = action.payload;
-        console.log("Reducer received update:", updatedhabit.id);
-        console.log("Current state IDs:", state.habitList.map(t => t.id));
-        state.habitList = state.habitList.map(habit =>
-            habit.id === updatedhabit.id ? updatedhabit : habit
-        );
+            const updatedhabit = action.payload;
+            console.log("Reducer received update:", updatedhabit.id);
+            console.log("Current state IDs:", state.habitList.map(t => t.id));
+
+            state.habitList = state.habitList.map(habit => {
+                if (habit.id === updatedhabit.id) {
+                    updateHabitInDB(updatedhabit); // only call DB update when habit is updated
+                    return updatedhabit;
+                }
+                return habit;
+            });
         },
         setHabits(state, action) 
         {
