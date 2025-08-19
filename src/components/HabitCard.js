@@ -98,7 +98,7 @@ export const HabitCard = ({habit}) => {
   <button onClick={markCompleted} className={`${habit.type === 'good' ? 'bg-green-300' : 'bg-red-300'} px-4`}>+</button>
 
   
-  <h1 className="text-center m-auto cursor-grab active:cursor-grabbing"  {...listeners}>
+  <h1 className="text-center m-auto cursor-grab active:cursor-grabbing w-96"  {...listeners}>
     {habit.title}
   </h1>
 

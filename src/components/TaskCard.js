@@ -90,7 +90,7 @@ export const TaskCard = ({task}) => {
   <button onClick={markCompleted} className="bg-green-300 px-4">+</button>
 
   
-  <h1 className="text-center m-auto cursor-grab active:cursor-grabbing"  {...listeners}>
+  <h1 className="text-center m-auto cursor-grab active:cursor-grabbing w-96"  {...listeners}>
     {task.title}
   </h1>
 

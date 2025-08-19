@@ -64,8 +64,8 @@ export const HabitManager = () => {
   }
 
   return (
-    <div className="bg-mainGray w-full p-8 text-myWhite">
-      <XpBar />
+    <div className="bg-mainGray p-8 text-myWhite">
+      
 
       <div className="w-80 p-2 bg-darkGray rounded">
         
