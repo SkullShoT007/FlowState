@@ -1,5 +1,36 @@
-const {createSlice} = require("@reduxjs/toolkit")
+import { XpDB } from '../indexedDB/XpDB.js';
+const {createSlice, createAsyncThunk} = require("@reduxjs/toolkit")
 
+
+// Async thunks for IndexedDB operations
+export const loadXpFromDB = createAsyncThunk(
+    'xp/loadFromDB',
+    async () => {
+        const xpData = await XpDB.loadXpData();
+        return xpData;
+    }
+);
+
+export const saveXpToDB = createAsyncThunk(
+    'xp/saveToDB',
+    async (xpData) => {
+        await XpDB.saveXpData(xpData);
+        return xpData;
+    }
+);
+
+export const clearXpFromDB = createAsyncThunk(
+    'xp/clearFromDB',
+    async () => {
+        await XpDB.clearXpData();
+        return {
+            experience: 0,
+            level: 0,
+            nextLevelXp: 100,
+            totalxp: 0
+        };
+    }
+);
 
 const xpSlice = createSlice({
     name: "xp",
@@ -86,9 +117,41 @@ const xpSlice = createSlice({
                 ...state,
                 experience: newExperience
             };
-        },  
+        },
+        
+        // Synchronous action to set XP state directly (for loading from DB)
+        setXpState(state, action) {
+            return {
+                ...state,
+                ...action.payload
+            };
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            // Handle loadXpFromDB
+            .addCase(loadXpFromDB.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    ...action.payload
+                };
+            })
+            .addCase(loadXpFromDB.rejected, (state, action) => {
+                console.error('Failed to load XP data from IndexedDB:', action.error);
+                // Keep current state on error
+            })
+            // Handle clearXpFromDB
+            .addCase(clearXpFromDB.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    ...action.payload
+                };
+            })
+            .addCase(clearXpFromDB.rejected, (state, action) => {
+                console.error('Failed to clear XP data from IndexedDB:', action.error);
+            });
     }
 })
 
-export const {completeTask, notCompleteTask, GoodHabit, BadHabit} = xpSlice.actions;
+export const {completeTask, notCompleteTask, GoodHabit, BadHabit, setXpState} = xpSlice.actions;
 export const xpReducer = xpSlice.reducer;
