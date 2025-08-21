@@ -3,12 +3,14 @@ import { taskReducer } from "./taskSlice";
 import { habitReducer } from "./habitSlice";
 import { xpReducer } from "./xpSlice";
 import { xpPersistenceMiddleware } from "./xpPersistenceMiddleware";
+import { pomodoroReducer } from "./pomodoroSlice";
 
 export const store = configureStore({
     reducer: {
         taskState: taskReducer,
         habitState: habitReducer,
-        xpState: xpReducer
+        xpState: xpReducer,
+        pomodoroState: pomodoroReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

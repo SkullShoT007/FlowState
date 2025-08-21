@@ -1,28 +1,49 @@
-import {DailyFocusChart} from './DailyFocusChart';
-import { SessionDistribution } from './SessionDistribution';
-import { StreakandGoal } from './StreakandGoal';
-import { DistractionTimeline } from './DistractionTimeline';
-import { XpProgressionChart } from './XpProgressionChart';
+import { TaskCompletionChart } from "./TaskCompletionChart";
+import { TaskDifficultyChart } from "./TaskDifficultyChart";
+import { HabitTrendChart } from "./HabitTrendChart";
+import { HabitTypeChart } from "./HabitTypeChart";
+import { XpProgressChart } from "./XpProgressChart";
+import { XpRadialChart } from "./XpRadialChart";
+import { PomodoroDailyChart } from "./PomodoroDailyChart";
+import { PomodoroModeChart } from "./PomodoroModeChart";
 
 export const Analytics = () => {
   return (
-    <div className='grid grid-rows-10 grid-cols-9 gap-4 w-full h-screen m-10'>
-      <div className='col-span-4 row-span-5'>
-          <DailyFocusChart />
+    <div className="grid grid-cols-10 m-5 gap-4">
+      
+      <div className="col-span-4"> 
+          <HabitTrendChart />
       </div>
-      <div className='col-span-3 row-span-4'>
-        <SessionDistribution/>
+      <div className="col-span-2"> 
+          <TaskCompletionChart />
       </div>
-      <div className='col-span-2'>
-        <StreakandGoal/>
+      <div className="col-span-4">
+        <TaskDifficultyChart />
       </div>
-      <div className='col-span-4 row-span-5 row-start-6'>
-        <DistractionTimeline />
+      <div className="row-start-2 col-span-3">
+        <XpRadialChart />
+        
       </div>
-      <div className='col-span-3 row-span-5'>
-          <XpProgressionChart/>
+      <div className="col-span-7">
+        <XpProgressChart />
       </div>
-
+      <div className="col-span-3">
+        <HabitTypeChart />
+      </div>
+      <div className="col-span-3">
+        <PomodoroDailyChart />
+      </div>
+      <div className="col-span-4">
+        <PomodoroModeChart />
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
     </div>
-  )
+  );
 }

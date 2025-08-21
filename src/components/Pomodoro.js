@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { addPomodoroSessionToDB, loadAllPomodoroSessions } from "./store/pomodoroSlice";
 
 // Single-file, production-ready Pomodoro timer component
 // - Accurate countdown (no drift) using endTime math
@@ -35,6 +37,7 @@ function durationFor(mode, settings) {
 }
 
 export const Pomodoro = ()=> {
+  const dispatch = useDispatch();
   const [settings, setSettings] = useState(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
@@ -75,6 +78,7 @@ export const Pomodoro = ()=> {
   const endTimeRef = useRef(null);
   const tickRef = useRef(null);
   const audioRef = useRef(null);
+  const sessionStartRef = useRef(null);
 
   // Prepare total for the current mode (for progress ring)
   const totalMs = useMemo(() => durationFor(mode, settings), [mode, settings]);
@@ -117,6 +121,11 @@ export const Pomodoro = ()=> {
     };
   }, [isRunning]);
 
+  // Load saved sessions once when Pomodoro mounts
+  useEffect(() => {
+    dispatch(loadAllPomodoroSessions());
+  }, [dispatch]);
+
   // Update document title
   useEffect(() => {
     document.title = `${mmss(remainingMs)} — ${mode === "focus" ? "Focus" : mode === "short" ? "Short Break" : "Long Break"}`;
@@ -140,6 +149,11 @@ export const Pomodoro = ()=> {
     if (isRunning) return;
     endTimeRef.current = Date.now() + remainingMs;
     setIsRunning(true);
+    // Mark the session start timestamp if starting fresh
+    if (!sessionStartRef.current) {
+      const elapsed = durationFor(mode, settings) - remainingMs;
+      sessionStartRef.current = new Date(Date.now() - Math.max(0, elapsed));
+    }
   };
 
   const pause = () => {
@@ -150,6 +164,7 @@ export const Pomodoro = ()=> {
   const reset = () => {
     pause();
     setRemainingMs(durationFor(mode, settings));
+    sessionStartRef.current = null;
   };
 
   const skip = () => {
@@ -188,6 +203,34 @@ export const Pomodoro = ()=> {
     beep();
     const justFinished = mode;
 
+    // Persist session record to Redux + IndexedDB
+    try {
+      const totalForMode = durationFor(justFinished, settings);
+      const elapsedMs = Math.min(totalForMode, Math.max(0, totalForMode - remainingMs));
+      const endTime = new Date();
+      const startTime = sessionStartRef.current
+        ? new Date(sessionStartRef.current)
+        : new Date(endTime.getTime() - elapsedMs);
+      const dateKey = endTime.toISOString().slice(0, 10);
+      const sessionRecord = {
+        startTime: startTime.toISOString(),
+        endTime: endTime.toISOString(),
+        mode: justFinished,
+        durationMs: manualSkip ? elapsedMs : totalForMode,
+        wasSkipped: manualSkip,
+        cycle: cycle,
+        date: dateKey,
+        settings
+      };
+      dispatch(addPomodoroSessionToDB(sessionRecord));
+    } catch (e) {
+      // non-blocking
+      console.error('Failed to log Pomodoro session', e);
+    }
+
+    // Reset start marker for next session
+    sessionStartRef.current = null;
+
     let nextMode = "focus";
     let nextCycle = cycle;
 
@@ -215,6 +258,8 @@ export const Pomodoro = ()=> {
     if (settings.autoStartNext) {
       endTimeRef.current = Date.now() + nextDuration;
       setIsRunning(true);
+      // Initialize next session start timestamp on auto-start
+      sessionStartRef.current = new Date();
     } else {
       setIsRunning(false);
     }
@@ -261,7 +306,7 @@ export const Pomodoro = ()=> {
         <div className="flex items-center justify-between gap-2 mb-4">
           <div className="text-xl font-semibold text-myWhite">Pomodoro</div>
           <div className="flex items-center gap-2">
-            <ModePill current={mode} setMode={(m) => { setMode(m); setRemainingMs(durationFor(m, settings)); setIsRunning(false); }} />
+            <ModePill current={mode} setMode={(m) => { setMode(m); setRemainingMs(durationFor(m, settings)); setIsRunning(false); sessionStartRef.current = null; }} />
             <button className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-sm" onClick={() => setShowSettings(v => !v)}>
               {showSettings ? "Close" : "Settings"}
             </button>

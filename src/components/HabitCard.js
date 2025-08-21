@@ -4,6 +4,7 @@ import {GoodHabit, BadHabit} from "./store/xpSlice"
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
 import { deleteFromDB, updateHabitInDB } from "./indexedDB/HabitDB";
+import { HabitHistoryDB } from "./indexedDB/HabitHistoryDB";
 import { useSortable } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities"
 export const HabitCard = ({habit}) => {
@@ -28,12 +29,14 @@ export const HabitCard = ({habit}) => {
       dispatch(GoodHabit({xp: 50}))
       dispatch(update({ ...habit, completed: true }));
       updateHabitInDB({...habit, completed: true})
+      HabitHistoryDB.recordCompletion({ habitId: habit.id, status: true }).catch(()=>{})
     }
     else if(habit.type === 'bad')
     {
       dispatch(BadHabit({xp:50}))
       dispatch(update({ ...habit, completed: true }));
       updateHabitInDB({...habit, completed: true})
+      HabitHistoryDB.recordCompletion({ habitId: habit.id, status: true }).catch(()=>{})
     }
 
   }
@@ -45,12 +48,14 @@ export const HabitCard = ({habit}) => {
       dispatch(GoodHabit({xp: -50}))
       dispatch(update({ ...habit, completed: false }));
       updateHabitInDB({...habit, completed: false})
+      HabitHistoryDB.recordCompletion({ habitId: habit.id, status: false }).catch(()=>{})
     }
     else if(habit.type === 'bad')
     {
       dispatch(BadHabit({xp:50}))
       dispatch(update({ ...habit, completed: false }));
       updateHabitInDB({...habit, completed: false})
+      HabitHistoryDB.recordCompletion({ habitId: habit.id, status: false }).catch(()=>{})
     }
   }
 

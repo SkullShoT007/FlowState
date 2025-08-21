@@ -4,7 +4,7 @@ export const Sidebar = () => {
     
     
   return (
-    <div className='w-72 min-h-screen text-myWhite bg-darkGray p-5'>
+    <div className='min-w-72 min-h-screen text-myWhite bg-darkGray p-5'>
         <div className="py-2 bg-extraLightGray rounded">
             <h1 className="text-center">Tanmay Waghmare</h1>
         </div>

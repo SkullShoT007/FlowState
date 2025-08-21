@@ -1,4 +1,5 @@
 import { XpDB } from '../indexedDB/XpDB.js';
+import db from '../indexedDB/indexedDB.js';
 
 // List of XP-related actions that should trigger persistence
 const XP_ACTIONS = [
@@ -25,6 +26,18 @@ export const xpPersistenceMiddleware = (store) => (next) => (action) => {
         });
         
         console.log('XP state saved to IndexedDB after action:', action.type);
+
+        // Also append a snapshot to xpHistory for progression chart
+        if (db && db.xpHistory) {
+            const snapshot = {
+                timestamp: new Date().toISOString(),
+                totalxp: xpState.totalxp,
+                level: xpState.level,
+                experience: xpState.experience,
+                nextLevelXp: xpState.nextLevelXp
+            };
+            db.xpHistory.add(snapshot).catch(() => {});
+        }
     }
     
     return result;
