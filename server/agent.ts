@@ -30,7 +30,7 @@ async function retryWithBackoff<T>(
     throw new Error("Max retries exceeded");
 }
 
-export async function callAgent(client: MongoClient, query: string, thread_id: string) {
+export async function callAgent(client: MongoClient, query: string, thread_id: string, indexedDBData: any = null) {
     try {
         const dbName = "flowstate_database";
         const db = client.db(dbName);
@@ -46,6 +46,148 @@ export async function callAgent(client: MongoClient, query: string, thread_id: s
             async({query, n = 1}) => {
               try {
                     console.log("Item lookup tool called with query:", query);
+                    
+                    // Use real-time IndexedDB data if available
+                    if (indexedDBData) {
+                        console.log("Using real-time IndexedDB data");
+                        console.log("Available data:", {
+                            tasksCount: indexedDBData.tasks?.length || 0,
+                            habitsCount: indexedDBData.habits?.length || 0,
+                            xpCount: indexedDBData.xp?.length || 0,
+                            pomodoroCount: indexedDBData.pomodoroSessions?.length || 0
+                        });
+                        console.log("Sample tasks:", indexedDBData.tasks?.slice(0, 2));
+                        console.log("Sample habits:", indexedDBData.habits?.slice(0, 2));
+                        
+                        // Search through all data types
+                        const allData = [];
+                        
+                        // Check if query asks for multiple data types or general information
+                        const queryLower = query.toLowerCase();
+                        const asksForTasks = queryLower.includes('task');
+                        const asksForHabits = queryLower.includes('habit');
+                        const asksForAll = queryLower.includes('all') || queryLower.includes('everything') || queryLower.includes('both');
+                        const asksForList = queryLower.includes('list') || queryLower.includes('show') || queryLower.includes('what');
+                        
+                        // Search tasks
+                        if (indexedDBData.tasks) {
+                            let taskMatches = [];
+                            if (asksForTasks || asksForAll || asksForList) {
+                                // If user asks for tasks, all data, or general listing, return all tasks
+                                taskMatches = indexedDBData.tasks;
+                            } else {
+                                // Otherwise filter by specific criteria
+                                taskMatches = indexedDBData.tasks.filter((task: any) => 
+                                    task.title?.toLowerCase().includes(queryLower) ||
+                                    task.description?.toLowerCase().includes(queryLower) ||
+                                    task.difficulty?.toString().includes(query) ||
+                                    (task.completed ? 'completed' : 'pending').includes(queryLower)
+                                );
+                            }
+                            allData.push(...taskMatches.map((task: any) => ({ ...task, type: 'task' })));
+                        }
+                        
+                        // Search habits
+                        if (indexedDBData.habits) {
+                            let habitMatches = [];
+                            if (asksForHabits || asksForAll || asksForList) {
+                                // If user asks for habits, all data, or general listing, return all habits
+                                habitMatches = indexedDBData.habits;
+                            } else {
+                                // Otherwise filter by specific criteria
+                                habitMatches = indexedDBData.habits.filter((habit: any) => 
+                                    habit.title?.toLowerCase().includes(queryLower) ||
+                                    habit.description?.toLowerCase().includes(queryLower) ||
+                                    habit.type?.toLowerCase().includes(queryLower) ||
+                                    (habit.completed ? 'completed' : 'pending').includes(queryLower)
+                                );
+                            }
+                            allData.push(...habitMatches.map((habit: any) => ({ ...habit, type: 'habit' })));
+                        }
+                        
+                        // Search XP data
+                        if (indexedDBData.xp && indexedDBData.xp.length > 0) {
+                            const xpData = indexedDBData.xp[0];
+                            if (queryLower.includes('xp') || 
+                                queryLower.includes('experience') || 
+                                queryLower.includes('level') ||
+                                queryLower.includes('progress') ||
+                                asksForAll ||
+                                asksForList) {
+                                allData.push({ ...xpData, type: 'xp' });
+                            }
+                        }
+                        
+                        // Search Pomodoro sessions
+                        if (indexedDBData.pomodoroSessions) {
+                            let pomodoroMatches = [];
+                            if (queryLower.includes('pomodoro') || queryLower.includes('session') || asksForAll || asksForList) {
+                                // If user asks for pomodoro sessions generally, return all sessions
+                                pomodoroMatches = indexedDBData.pomodoroSessions;
+                            } else {
+                                // Otherwise filter by specific criteria
+                                pomodoroMatches = indexedDBData.pomodoroSessions.filter((session: any) => 
+                                    session.mode?.toLowerCase().includes(queryLower) ||
+                                    session.date?.toLowerCase().includes(queryLower) ||
+                                    (session.wasSkipped ? 'skipped' : 'completed').includes(queryLower)
+                                );
+                            }
+                            allData.push(...pomodoroMatches.map((session: any) => ({ ...session, type: 'pomodoro' })));
+                        }
+                        
+                        // Search habit history
+                        if (indexedDBData.habitHistory) {
+                            const historyMatches = indexedDBData.habitHistory.filter((history: any) => 
+                                history.date?.includes(query) ||
+                                (history.status ? 'completed' : 'missed').includes(query.toLowerCase())
+                            );
+                            allData.push(...historyMatches.map((history: any) => ({ ...history, type: 'habitHistory' })));
+                        }
+                        
+                        // Search XP history
+                        if (indexedDBData.xpHistory) {
+                            const xpHistoryMatches = indexedDBData.xpHistory.filter((history: any) => 
+                                history.timestamp?.includes(query) ||
+                                history.level?.toString().includes(query) ||
+                                history.totalxp?.toString().includes(query)
+                            );
+                            allData.push(...xpHistoryMatches.map((history: any) => ({ ...history, type: 'xpHistory' })));
+                        }
+                        
+                        // For general queries, return more results, but limit to prevent overwhelming responses
+                        const maxResults = asksForTasks || asksForHabits || asksForAll || asksForList ? 50 : n;
+                        const limitedResults = allData.slice(0, maxResults);
+                        console.log(`Found ${limitedResults.length} results in IndexedDB data`);
+                        console.log('Query analysis:', {
+                            query: query,
+                            asksForTasks,
+                            asksForHabits,
+                            asksForAll,
+                            asksForList,
+                            foundTasks: allData.filter(item => item.type === 'task').length,
+                            foundHabits: allData.filter(item => item.type === 'habit').length,
+                            foundXP: allData.filter(item => item.type === 'xp').length,
+                            foundPomodoro: allData.filter(item => item.type === 'pomodoro').length
+                        });
+                        
+                        return JSON.stringify({
+                            results: limitedResults,
+                            searchType: "indexeddb",
+                            query: query,
+                            count: limitedResults.length,
+                            dataTypes: {
+                                tasks: indexedDBData.tasks?.length || 0,
+                                habits: indexedDBData.habits?.length || 0,
+                                xp: indexedDBData.xp?.length || 0,
+                                pomodoroSessions: indexedDBData.pomodoroSessions?.length || 0,
+                                habitHistory: indexedDBData.habitHistory?.length || 0,
+                                xpHistory: indexedDBData.xpHistory?.length || 0
+                            }
+                        });
+                    }
+                    
+                    // Fallback to MongoDB if no IndexedDB data available
+                    console.log("No IndexedDB data available, falling back to MongoDB");
                     const totalCount = await collection.countDocuments();
                     console.log(`Total documents in collection: ${totalCount}`);
 
@@ -124,10 +266,10 @@ export async function callAgent(client: MongoClient, query: string, thread_id: s
             },
             {
                 name: "item_lookup",
-                description: "Gather information",
+                description: "Gather information about tasks, habits, XP progress, and Pomodoro sessions from the user's real-time data. For general queries like 'what are my tasks', it will return all matching items.",
                 schema: z.object({
-                    query: z.string().describe("The search query"),
-                    n: z.number().default(1).describe("Number of results to return")
+                    query: z.string().describe("The search query to find relevant tasks, habits, XP data, or Pomodoro sessions"),
+                    n: z.number().default(1).describe("Number of results to return (ignored for general queries which return all matching items)")
                 }),
             }
         );
@@ -159,15 +301,24 @@ export async function callAgent(client: MongoClient, query: string, thread_id: s
                 const prompt = ChatPromptTemplate.fromMessages([
                     [
                         "system",
-                        `You are a helpful Assistant for managing tasks, habits, and analytics.
+                        `You are a helpful Assistant for managing tasks, habits, and analytics for the FlowState productivity app.
 
-                        IMPORTANT: You have access to a item_lookup tool that queries the database (IndexedDB/ElasticSearch/MongoDB with vector index). 
-                        ALWAYS use this tool when the user asks about tasks, habits, progress, or related insights — even if the tool returns errors or empty results.
+                        IMPORTANT: You have access to a item_lookup tool that queries the user's real-time IndexedDB data (tasks, habits, XP progress, Pomodoro sessions, and history). 
+                        ALWAYS use this tool when the user asks about tasks, habits, progress, analytics, or related insights — even if the tool returns errors or empty results.
 
                         When using the item_lookup tool:
-                        - If it returns results, provide clear and helpful details based on the data
+                        - If it returns results, provide clear and helpful details based on the real-time data
                         - If it returns no results or an error, acknowledge it and suggest alternatives (e.g., adding a new task/habit or checking another query)
                         - If the database appears empty, politely let the user know the system may still be initializing or syncing data
+                        - When users ask for multiple data types (e.g., "tasks and habits"), the tool will return all relevant data types
+
+                        You can help with:
+                        - Task management (viewing, creating, completing tasks)
+                        - Habit tracking (viewing habits, checking completion status)
+                        - XP and level progress analysis
+                        - Pomodoro session history and statistics
+                        - Productivity insights and recommendations
+                        - Combined queries (e.g., "show me my tasks and habits", "what's my overall progress")
 
                         Current time: {time}` 
                     ],

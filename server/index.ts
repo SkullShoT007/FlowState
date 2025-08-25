@@ -19,6 +19,9 @@ app.use(express.json())
 // Create MongoDB client using connection string from environment variables
 const client = new MongoClient(process.env.MONGODB_ATLAS_URI as string)
 
+// In-memory storage for real-time IndexedDB data
+let indexedDBData: any = null;
+
 // Async function to initialize and start the server
 async function startServer() {
   try {
@@ -35,17 +38,51 @@ async function startServer() {
       res.send('LangGraph Agent Server')
     })
 
+    // New endpoint to sync IndexedDB data from frontend
+    app.post('/sync-data', async (req: Request, res: Response) => {
+      try {
+        const data = req.body;
+        indexedDBData = data;
+        console.log('IndexedDB data synced:', {
+          tasks: data.tasks?.length || 0,
+          habits: data.habits?.length || 0,
+          xp: data.xp?.length || 0,
+          pomodoroSessions: data.pomodoroSessions?.length || 0,
+          habitHistory: data.habitHistory?.length || 0,
+          xpHistory: data.xpHistory?.length || 0
+        });
+        
+        // Log sample data for debugging
+        if (data.tasks && data.tasks.length > 0) {
+          console.log('Sample tasks:', data.tasks.slice(0, 2));
+        }
+        if (data.habits && data.habits.length > 0) {
+          console.log('Sample habits:', data.habits.slice(0, 2));
+        }
+        
+        res.json({ success: true, message: 'Data synced successfully' });
+      } catch (error) {
+        console.error('Error syncing data:', error);
+        res.status(500).json({ error: 'Failed to sync data' });
+      }
+    });
+
+    // New endpoint to get current synced data
+    app.get('/data', (req: Request, res: Response) => {
+      res.json({ data: indexedDBData });
+    });
+
     // Define endpoint for starting new conversations (POST /chat)
     app.post('/chat', async (req: Request, res: Response) => {
       // Extract user message from request body
-      const initialMessage = req.body.message
+      const initialMessage = (req.body as { message: string }).message
       // Generate unique thread ID using current timestamp
       const threadId = Date.now().toString()
       // Log the incoming message for debugging
       console.log(initialMessage)
       try {
-        // Call our AI agent with the message and new thread ID
-        const response = await callAgent(client, initialMessage, threadId)
+        // Call our AI agent with the message, new thread ID, and current IndexedDB data
+        const response = await callAgent(client, initialMessage, threadId, indexedDBData)
         // Send successful response with thread ID and AI response
         res.json({ threadId, response })
       } catch (error) {
@@ -59,12 +96,12 @@ async function startServer() {
     // Define endpoint for continuing existing conversations (POST /chat/:threadId)
     app.post('/chat/:threadId', async (req: Request, res: Response) => {
       // Extract thread ID from URL parameters
-      const { threadId } = req.params
+      const { threadId } = req.params as { threadId: string }
       // Extract user message from request body
-      const { message } = req.body
+      const { message } = req.body as { message: string }
       try {
-        // Call AI agent with message and existing thread ID (continues conversation)
-        const response = await callAgent(client, message, threadId)
+        // Call AI agent with message, existing thread ID, and current IndexedDB data
+        const response = await callAgent(client, message, threadId, indexedDBData)
         // Send AI response (no need to send threadId again since it's continuing)
         res.json({ response })
       } catch (error) {
