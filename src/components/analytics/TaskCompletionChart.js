@@ -9,10 +9,11 @@ export const TaskCompletionChart = () => {
     { name: "Completed", value: completed },
     { name: "Pending", value: pending },
   ];
-  const COLORS = ["#4CAF50", "#FF5722"];
+  // App theme colors
+  const COLORS = ["#7289DA", "#424549"]; // myBlue, extraLightGray
 
   return (
-    <div className="p-4 shadow rounded-2xl bg-white">
+    <div className="p-4 shadow rounded-2xl bg-darkGray text-myWhite">
       <h2 className="text-lg font-semibold mb-2">Task Completion</h2>
       <PieChart width={200} height={250}>
         <Pie
@@ -21,14 +22,14 @@ export const TaskCompletionChart = () => {
           cx="50%"
           cy="50%"
           outerRadius={80}
-          label
+          label={false}
         >
           {data.map((entry, index) => (
             <Cell key={index} fill={COLORS[index]} />
           ))}
         </Pie>
-        <Tooltip />
-        <Legend />
+        <Tooltip contentStyle={{ backgroundColor: '#36393E', border: '1px solid #424549', color: '#ffffff' }} labelStyle={{ color: '#ffffff' }} itemStyle={{ color: '#ffffff' }} />
+        <Legend wrapperStyle={{ color: '#ffffff' }} />
       </PieChart>
     </div>
   );

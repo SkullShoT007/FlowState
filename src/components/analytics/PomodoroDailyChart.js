@@ -15,15 +15,15 @@ export const PomodoroDailyChart = () => {
   }, [sessions]);
 
   return (
-    <div className="p-4 shadow rounded-2xl bg-white">
+    <div className="p-4 shadow rounded-2xl bg-darkGray text-myWhite">
       <h2 className="text-lg font-semibold mb-2">Pomodoro Sessions</h2>
-      <BarChart width={400} height={250} data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="sessions" fill="#FF9800" />
+      <BarChart width={300} height={250} data={data}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#424549" />
+        <XAxis dataKey="date" stroke="#ffffff" />
+        <YAxis stroke="#ffffff" />
+        <Tooltip contentStyle={{ backgroundColor: '#36393E', border: '1px solid #424549', color: '#ffffff' }} labelStyle={{ color: '#ffffff' }} itemStyle={{ color: '#ffffff' }} />
+        <Legend wrapperStyle={{ color: '#ffffff' }} />
+        <Bar dataKey="sessions" fill="#7289DA" />
       </BarChart>
     </div>
   );

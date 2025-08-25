@@ -9,7 +9,7 @@ import { PomodoroModeChart } from "./PomodoroModeChart";
 
 export const Analytics = () => {
   return (
-    <div className="grid grid-cols-10 m-5 gap-4">
+    <div className="grid grid-cols-10 m-5 gap-4 bg-mainGray text-myWhite p-2 rounded-2xl">
       
       <div className="col-span-4"> 
           <HabitTrendChart />

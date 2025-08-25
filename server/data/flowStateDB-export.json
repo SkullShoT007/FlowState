@@ -1,0 +1,222 @@
+{
+  "appMeta": [
+    {
+      "key": "lastHabitReset",
+      "value": "2025-08-22T09:50:56.648Z"
+    }
+  ],
+  "habitHistory": [
+    {
+      "habitId": 2400,
+      "date": "2025-08-21",
+      "status": true,
+      "id": 1
+    },
+    {
+      "habitId": 2400,
+      "date": "2025-08-21",
+      "status": true,
+      "id": 2
+    },
+    {
+      "habitId": 3527,
+      "date": "2025-08-21",
+      "status": true,
+      "id": 3
+    },
+    {
+      "habitId": 2593,
+      "date": "2025-08-21",
+      "status": true,
+      "id": 4
+    }
+  ],
+  "habits": [
+    {
+      "id": 2593,
+      "title": "workout",
+      "type": "good",
+      "completed": false
+    },
+    {
+      "id": 3527,
+      "title": "reading book",
+      "type": "good",
+      "completed": false
+    },
+    {
+      "id": 7563,
+      "title": "junk food",
+      "type": "bad",
+      "completed": false
+    }
+  ],
+  "pomodoroSessions": [
+    {
+      "type": "short",
+      "duration": 300000,
+      "startTime": "2025-08-20T04:40:46.927Z",
+      "endTime": "2025-08-20T04:45:45.379Z",
+      "completed": true,
+      "skipped": false,
+      "date": "Wed Aug 20 2025",
+      "cycleNumber": 9,
+      "actualDuration": 298452,
+      "id": 1
+    }
+  ],
+  "tasks": [
+    {
+      "id": 6703,
+      "title": "HEllo",
+      "difficulty": "10",
+      "completed": true
+    },
+    {
+      "id": 9751,
+      "title": "yo",
+      "difficulty": "10",
+      "completed": false
+    }
+  ],
+  "xp": [
+    {
+      "id": 1,
+      "experience": 170,
+      "level": 2,
+      "nextLevelXp": 400,
+      "totalxp": 470,
+      "lastUpdated": "2025-08-21T13:00:38.176Z"
+    }
+  ],
+  "xpHistory": [
+    {
+      "timestamp": "2025-08-21T12:18:38.207Z",
+      "totalxp": 40,
+      "level": 0,
+      "experience": 40,
+      "nextLevelXp": 100,
+      "id": 1
+    },
+    {
+      "timestamp": "2025-08-21T12:18:57.681Z",
+      "totalxp": 50,
+      "level": 0,
+      "experience": 50,
+      "nextLevelXp": 100,
+      "id": 2
+    },
+    {
+      "timestamp": "2025-08-21T12:19:03.624Z",
+      "totalxp": 60,
+      "level": 0,
+      "experience": 60,
+      "nextLevelXp": 100,
+      "id": 3
+    },
+    {
+      "timestamp": "2025-08-21T12:19:04.319Z",
+      "totalxp": 70,
+      "level": 0,
+      "experience": 70,
+      "nextLevelXp": 100,
+      "id": 4
+    },
+    {
+      "timestamp": "2025-08-21T12:19:15.343Z",
+      "totalxp": 80,
+      "level": 0,
+      "experience": 80,
+      "nextLevelXp": 100,
+      "id": 5
+    },
+    {
+      "timestamp": "2025-08-21T12:19:16.043Z",
+      "totalxp": 90,
+      "level": 0,
+      "experience": 90,
+      "nextLevelXp": 100,
+      "id": 6
+    },
+    {
+      "timestamp": "2025-08-21T12:19:16.679Z",
+      "totalxp": 100,
+      "level": 1,
+      "experience": 0,
+      "nextLevelXp": 200,
+      "id": 7
+    },
+    {
+      "timestamp": "2025-08-21T12:19:25.460Z",
+      "totalxp": 110,
+      "level": 1,
+      "experience": 10,
+      "nextLevelXp": 200,
+      "id": 8
+    },
+    {
+      "timestamp": "2025-08-21T12:20:13.107Z",
+      "totalxp": 160,
+      "level": 1,
+      "experience": 60,
+      "nextLevelXp": 200,
+      "id": 9
+    },
+    {
+      "timestamp": "2025-08-21T12:20:28.168Z",
+      "totalxp": 210,
+      "level": 1,
+      "experience": 110,
+      "nextLevelXp": 200,
+      "id": 10
+    },
+    {
+      "timestamp": "2025-08-21T12:20:37.836Z",
+      "totalxp": 260,
+      "level": 1,
+      "experience": 160,
+      "nextLevelXp": 200,
+      "id": 11
+    },
+    {
+      "timestamp": "2025-08-21T12:23:45.738Z",
+      "totalxp": 310,
+      "level": 2,
+      "experience": 10,
+      "nextLevelXp": 400,
+      "id": 12
+    },
+    {
+      "timestamp": "2025-08-21T12:23:46.098Z",
+      "totalxp": 360,
+      "level": 2,
+      "experience": 60,
+      "nextLevelXp": 400,
+      "id": 13
+    },
+    {
+      "timestamp": "2025-08-21T12:33:17.527Z",
+      "totalxp": 370,
+      "level": 2,
+      "experience": 70,
+      "nextLevelXp": 400,
+      "id": 14
+    },
+    {
+      "timestamp": "2025-08-21T13:00:37.786Z",
+      "totalxp": 420,
+      "level": 2,
+      "experience": 120,
+      "nextLevelXp": 400,
+      "id": 15
+    },
+    {
+      "timestamp": "2025-08-21T13:00:38.176Z",
+      "totalxp": 470,
+      "level": 2,
+      "experience": 170,
+      "nextLevelXp": 400,
+      "id": 16
+    }
+  ]
+}
