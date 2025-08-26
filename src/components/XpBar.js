@@ -9,9 +9,9 @@ export const XpBar = () => {
   return (
     <>
     <h1>Level: {level}</h1>
-    <div className='relative h-6 bg-white w-[32rem] rounded'>
+    <div className='relative h-6 bg-darkBlue w-[32rem] rounded'>
         <div
-            className="h-6 bg-myBlue rounded text-black text-center transition-all duration-300 max-w-[32rem]"
+            className="h-6 bg-brightBlue rounded text-black text-center transition-all duration-300 max-w-[32rem]"
             style={{ width: `${percent}%` }}
           >
         {Math.floor(xp)}

@@ -85,9 +85,9 @@ export const TaskCard = ({task}) => {
         </div>
     </div> */}
 
-    <div style={style} ref={setNodeRef} {...attributes} className="group flex justify-between w-full h-10 hover:h-16 transition-all bg-darkGray rounded bg-mainGray mt-2">
+    <div style={style} ref={setNodeRef} {...attributes} className="group flex justify-between w-full h-12 hover:h-16 transition-all bg-darkBlue rounded mt-2">
   
-  <button onClick={markCompleted} className="bg-green-300 px-4">+</button>
+  <button onClick={markCompleted} className="bg-brightBlue px-4 rounded-l">+</button>
 
   
   <h1 className="text-center m-auto cursor-grab active:cursor-grabbing w-96"  {...listeners}>

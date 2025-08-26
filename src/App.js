@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setHabits } from './components/store/habitSlice';
 import { getHabits } from './components/indexedDB/HabitDB';
 import { startAutoSync, syncDataToServer } from './components/indexedDB/dataSync';
+import { Header } from './components/Header';
 
 function App() {
   const dispatch = useDispatch();
@@ -62,10 +63,15 @@ function App() {
   }, []);
 
   return (
-    <div className="App flex bg-lightGray">
-      <Sidebar />
+    <div className="App flex bg-darkBlue text-myWhite">
+      
       <div className="flex-1">
-        <AllRoutes />
+        <Header/>
+        <div className='flex'>
+            <Sidebar />
+          <AllRoutes />
+        </div>
+        
       </div>
       <AIAgentSidebar 
         isOpen={isAIAgentOpen} 

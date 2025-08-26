@@ -9,7 +9,11 @@ export default {
         'lightGray' : '#36393E',
         'extraLightGray' : '#424549',
         'myBlue' : '#7289DA',
-        'myWhite' : '#ffffff'
+        'myWhite' : '#ffffff',
+        'darkBlue': '#0F172A',
+        'dullBlue': '#1E293B',
+        'brightBlue': '#33ACE4',
+        'darkerBlue': "#151E2C"
       }
      },
    },

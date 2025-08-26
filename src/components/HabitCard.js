@@ -98,9 +98,9 @@ export const HabitCard = ({habit}) => {
   }
   return (
     <>
-    <div style={style} ref={setNodeRef} {...attributes} className="group flex justify-between w-full h-10 hover:h-16 transition-all bg-darkGray rounded bg-mainGray mt-2">
-  
-  <button onClick={markCompleted} className={`${habit.type === 'good' ? 'bg-green-300' : 'bg-red-300'} px-4`}>+</button>
+    <div style={style} ref={setNodeRef} {...attributes} className="group flex justify-between w-full h-12 hover:h-16 transition-all bg-darkerBlue rounded mt-2">
+
+  <button onClick={markCompleted} className={`${habit.type === 'good' ? 'bg-brightBlue' : 'bg-red-300'} px-4 rounded-l`}>+</button>
 
   
   <h1 className="text-center m-auto cursor-grab active:cursor-grabbing w-96"  {...listeners}>

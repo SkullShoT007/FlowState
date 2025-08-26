@@ -67,10 +67,10 @@ export const TaskManager = () => {
   }
 
   return (
-    <div className="bg-mainGray p-8 text-myWhite">
+    <div className="p-8 text-myWhite">
       <audio ref={audioRef} src="./audio/positive.mp3" />
 
-      <div className="w-80 p-2 bg-darkGray rounded">
+      <div className="w-80 p-2 bg-dullBlue rounded">
         
         <form
           className="habit-form flex flex-col items-center"
@@ -84,7 +84,7 @@ export const TaskManager = () => {
         >
           <input
             ref={titleRef}
-            className={`p-2 w-full m-auto rounded bg-lightGray transition-all duration-300 ${
+            className={`p-2 w-full m-auto rounded bg-darkerBlue transition-all duration-300 ${
               expanded ? "h-16" : "h-10"
             }`}
             type="text"
@@ -94,7 +94,7 @@ export const TaskManager = () => {
           {expanded && (
             <select
               ref={typeRef}
-              className="bg-darkGray p-2 rounded w-60 m-auto mt-2 transition-opacity duration-300"
+              className="bg-dullBlue p-2 rounded w-60 m-auto mt-2 transition-opacity duration-300"
               name="habit-type"
             >
               <option value="10">Easy</option>

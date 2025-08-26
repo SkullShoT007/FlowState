@@ -3,19 +3,16 @@ import { Sidebar } from "./Sidebar"
 import { HabitManager } from "./HabitManager";
 import { useState } from "react";
 import { XpBar } from "./XpBar";
+import { Header } from "./Header";
 
 export const Home = () => {
   const [btn, setBtn] = useState(true)
   return (
-    <main className="flex flex-col bg-mainGray w-full p-8 text-myWhite">
-       <XpBar/>
-       <div className="flex justify-start">
+    <main className="flex w-full text-myWhite justify-evenly mt-10">
+        
            <TaskManager/>
           <HabitManager/>
-       </div>
-     
-      
-      
+       
     </main>
   )
 }
