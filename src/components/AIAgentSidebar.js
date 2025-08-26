@@ -173,7 +173,7 @@ export const AIAgentSidebar = ({ isOpen, onToggle }) => {
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="bg-darkGray text-white p-4 flex justify-between items-center">
+          <div className="bg-dullBlue text-white p-4 flex justify-between items-center">
             <h1 className="text-lg font-bold">AI Assistant</h1>
             <div className="flex space-x-2">
               <button
@@ -198,7 +198,7 @@ export const AIAgentSidebar = ({ isOpen, onToggle }) => {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-3">
+          <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-darkBlue">
             {messages.length === 0 && (
               <div className="text-center text-gray-500 mt-4">
                 <p className="text-sm mb-2">Welcome to your AI Assistant!</p>
@@ -216,8 +216,8 @@ export const AIAgentSidebar = ({ isOpen, onToggle }) => {
                 <div
                   className={`max-w-[200px] px-3 py-2 rounded-lg text-sm ${
                     message.role === 'user'
-                      ? 'bg-myBlue text-white'
-                      : 'bg-gray-100 text-gray-800'
+                      ? 'bg-dullBlue text-white'
+                      : 'bg-brightBlue text-white'
                   }`}
                 >
                   <p className="whitespace-pre-wrap break-words">{message.content}</p>
@@ -227,7 +227,7 @@ export const AIAgentSidebar = ({ isOpen, onToggle }) => {
             
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 text-gray-800 px-3 py-2 rounded-lg">
+                <div className="bg-brightBlue text-white px-3 py-2 rounded-lg">
                   <div className="flex items-center space-x-2">
                     <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-myBlue"></div>
                     <span className="text-sm">Thinking...</span>
@@ -240,14 +240,14 @@ export const AIAgentSidebar = ({ isOpen, onToggle }) => {
           </div>
 
           {/* Input */}
-          <div className="bg-gray-50 p-3 border-t">
+          <div className="bg-dullBlue p-3">
             <div className="flex space-x-2">
               <textarea
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Ask me anything..."
-                className="flex-1 p-2 border border-gray-300 rounded text-sm resize-none focus:outline-none focus:ring-2 focus:ring-myBlue"
+                className="flex-1 p-2 border border-gray-300 rounded text-sm resize-none focus:outline-none focus:ring-2 focus:ring-myBlue text-darkBlue"
                 rows="2"
                 disabled={isLoading}
               />

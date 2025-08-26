@@ -26,15 +26,15 @@ export const HabitTrendChart = () => {
   }, [history]);
 
   return (
-    <div className="p-4 shadow rounded-2xl bg-darkGray text-myWhite">
+    <div className="p-4 shadow rounded-2xl bg-dullBlue text-myWhite">
       <h2 className="text-lg font-semibold mb-2">Habit Completion Trend</h2>
       <AreaChart width={400} height={250} data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke="#424549" />
         <XAxis dataKey="date" stroke="#ffffff" />
         <YAxis stroke="#ffffff" />
-        <Tooltip contentStyle={{ backgroundColor: '#36393E', border: '1px solid #424549', color: '#ffffff' }} labelStyle={{ color: '#ffffff' }} itemStyle={{ color: '#ffffff' }} />
+        <Tooltip contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #424549', color: '#ffffff' }} labelStyle={{ color: '#ffffff' }} itemStyle={{ color: '#ffffff' }} />
         <Legend wrapperStyle={{ color: '#ffffff' }} />
-        <Area type="monotone" dataKey="completed" stroke="#7289DA" fill="#36393E" />
+        <Area type="monotone" dataKey="completed" stroke="#33ACE4" fill="#1E293B" />
       </AreaChart>
     </div>
   );

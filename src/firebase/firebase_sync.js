@@ -19,20 +19,38 @@ export async function syncIndexedDBToFirebase() {
   const firestore = getFirestore();
   const uid = auth.currentUser.uid;
 
-  // Read and sanitize all tables from IndexedDB
-  const tasks = (await db.tasks.toArray()).map(({ id, title, difficulty, completed }) =>
+  // Helper: safely read from a store, return empty array if store doesn't exist
+  const safeReadStore = async (storeName, mapper = (item) => item) => {
+    try {
+      const data = await db.table(storeName).toArray();
+      return data.map(mapper);
+    } catch (error) {
+      console.warn(`Store ${storeName} not found or error reading:`, error);
+      return [];
+    }
+  };
+
+  // Read and sanitize all tables from IndexedDB (with error handling)
+  const tasks = await safeReadStore('tasks', ({ id, title, difficulty, completed }) =>
     sanitize({ id, title, difficulty, completed })
   );
-  const habits = (await db.habits.toArray()).map(({ id, title, type, completed }) =>
+
+  const habits = await safeReadStore('habits', ({ id, title, type, completed }) =>
     sanitize({ id, title, type, completed })
   );
-  const pomodoroSessions = (await db.pomodoroSessions.toArray()).map(sanitize);
-  const xp = (await db.xp.toArray()).map(sanitize);
-  const xpHistory = (await db.xpHistory.toArray()).map(sanitize);
-  const habitHistory = (await db.habitHistory.toArray()).map(({ id, timestamp, completed, type }) =>
-    sanitize({ id, timestamp, completed, type })
+
+  const pomodoroSessions = await safeReadStore('pomodoroSessions', sanitize);
+
+  const xp = await safeReadStore('xp', sanitize);
+
+  const xpHistory = await safeReadStore('xpHistory', sanitize);
+
+  // Correct field mapping to match HabitHistory schema (id, habitId, date, status)
+  const habitHistory = await safeReadStore('habitHistory', ({ id, habitId, date, status }) =>
+    sanitize({ id, habitId, date, status })
   );
-  const appMeta = (await db.appMeta.toArray()).map(sanitize);
+
+  const appMeta = await safeReadStore('appMeta', sanitize);
 
   // Save to Firestore under user's document
   console.log(uid)

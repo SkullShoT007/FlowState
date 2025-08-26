@@ -10,10 +10,10 @@ export const TaskCompletionChart = () => {
     { name: "Pending", value: pending },
   ];
   // App theme colors
-  const COLORS = ["#7289DA", "#424549"]; // myBlue, extraLightGray
+  const COLORS = ["#33ACE4", "#424549"]; // brightBlue, extraLightGray
 
   return (
-    <div className="p-4 shadow rounded-2xl bg-darkGray text-myWhite">
+    <div className="p-4 shadow rounded-2xl bg-dullBlue text-myWhite">
       <h2 className="text-lg font-semibold mb-2">Task Completion</h2>
       <PieChart width={200} height={250}>
         <Pie
@@ -28,7 +28,7 @@ export const TaskCompletionChart = () => {
             <Cell key={index} fill={COLORS[index]} />
           ))}
         </Pie>
-        <Tooltip contentStyle={{ backgroundColor: '#36393E', border: '1px solid #424549', color: '#ffffff' }} labelStyle={{ color: '#ffffff' }} itemStyle={{ color: '#ffffff' }} />
+        <Tooltip contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #424549', color: '#ffffff' }} labelStyle={{ color: '#ffffff' }} itemStyle={{ color: '#ffffff' }} />
         <Legend wrapperStyle={{ color: '#ffffff' }} />
       </PieChart>
     </div>

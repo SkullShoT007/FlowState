@@ -23,8 +23,8 @@ export class PomodoroDB {
       };
 
       const id = await db.pomodoroSessions.add(record);
+      await syncIndexedDBToFirebase();
       return { id, ...record };
-      syncIndexedDBToFirebase()
     } catch (error) {
       console.error('Error adding Pomodoro session to IndexedDB:', error);
       throw error;

@@ -13,15 +13,15 @@ export const TaskDifficultyChart = () => {
   ];
 
   return (
-    <div className="p-4 shadow rounded-2xl bg-darkGray text-myWhite">
+    <div className="p-4 shadow rounded-2xl bg-dullBlue text-myWhite">
       <h2 className="text-lg font-semibold mb-2">Tasks by Difficulty</h2>
       <BarChart width={400} height={250} data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke="#424549" />
         <XAxis dataKey="difficulty" stroke="#ffffff" />
         <YAxis stroke="#ffffff" />
-        <Tooltip contentStyle={{ backgroundColor: '#36393E', border: '1px solid #424549', color: '#ffffff' }} labelStyle={{ color: '#ffffff' }} itemStyle={{ color: '#ffffff' }} />
+        <Tooltip contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #424549', color: '#ffffff' }} labelStyle={{ color: '#ffffff' }} itemStyle={{ color: '#ffffff' }} />
         <Legend wrapperStyle={{ color: '#ffffff' }} />
-        <Bar dataKey="tasks" fill="#7289DA" />
+        <Bar dataKey="tasks" fill="#33ACE4" />
       </BarChart>
     </div>
   );

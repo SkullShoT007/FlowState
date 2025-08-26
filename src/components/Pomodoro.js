@@ -301,13 +301,13 @@ export const Pomodoro = ()=> {
   const dash = Math.max(0, Math.min(circumference, circumference * progress));
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-mainGray p-6">
-      <div className="w-full max-w-xl rounded-2xl bg-extraLightGray shadow p-6">
+    <div className="min-h-screen w-full flex items-center justify-center bg-darkBlue p-6">
+      <div className="w-full max-w-xl rounded-2xl bg-dullBlue shadow p-6">
         <div className="flex items-center justify-between gap-2 mb-4">
           <div className="text-xl font-semibold text-myWhite">Pomodoro</div>
           <div className="flex items-center gap-2">
             <ModePill current={mode} setMode={(m) => { setMode(m); setRemainingMs(durationFor(m, settings)); setIsRunning(false); sessionStartRef.current = null; }} />
-            <button className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-sm" onClick={() => setShowSettings(v => !v)}>
+            <button className="px-3 py-1.5 rounded-xl bg-darkerBlue hover:bg-extraLightGray text-myWhite text-sm" onClick={() => setShowSettings(v => !v)}>
               {showSettings ? "Close" : "Settings"}
             </button>
           </div>
@@ -316,7 +316,7 @@ export const Pomodoro = ()=> {
         <div className="flex flex-col items-center">
           <div className="relative" style={{ width: size, height: size }}>
             <svg width={size} height={size} className="rotate-[-90deg]">
-              <circle cx={size/2} cy={size/2} r={radius} strokeWidth={stroke} fill="none" className="text-slate-200" stroke="currentColor" />
+              <circle cx={size/2} cy={size/2} r={radius} strokeWidth={stroke} fill="none" className="text-extraLightGray" stroke="currentColor" />
               <circle
                 cx={size/2}
                 cy={size/2}
@@ -325,13 +325,13 @@ export const Pomodoro = ()=> {
                 fill="none"
                 strokeDasharray={`${dash} ${circumference}`}
                 strokeLinecap="round"
-                className="text-blue-500 transition-all duration-200"
+                className="text-brightBlue transition-all duration-200"
                 stroke="currentColor"
               />
             </svg>
             <div className="absolute inset-0 grid place-items-center">
               <div className="text-myWhite text-6xl font-bold tabular-nums mt-12">{mmss(remainingMs)}</div>
-              <div className="text-sm text-slate-500 mt-2">{mode === "focus" ? "Focus" : mode === "short" ? "Short Break" : "Long Break"}</div>
+              <div className="text-sm text-extraLightGray mt-2">{mode === "focus" ? "Focus" : mode === "short" ? "Short Break" : "Long Break"}</div>
             </div>
           </div>
 
@@ -341,11 +341,11 @@ export const Pomodoro = ()=> {
             ) : (
               <button onClick={pause} className="px-5 py-2.5 rounded-2xl bg-amber-500 text-white shadow hover:bg-amber-600">Pause</button>
             )}
-            <button onClick={reset} className="px-4 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200">Reset</button>
-            <button onClick={skip} className="px-4 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200">Skip</button>
+            <button onClick={reset} className="px-4 py-2 rounded-2xl bg-darkerBlue hover:bg-extraLightGray text-myWhite">Reset</button>
+            <button onClick={skip} className="px-4 py-2 rounded-2xl bg-darkerBlue hover:bg-extraLightGray text-myWhite">Skip</button>
           </div>
 
-          <div className="mt-3 text-xs text-slate-500">Space: Start/Pause · R: Reset · S: Skip</div>
+          <div className="mt-3 text-xs text-extraLightGray">Space: Start/Pause · R: Reset · S: Skip</div>
         </div>
 
         {showSettings && (
@@ -359,7 +359,7 @@ export const Pomodoro = ()=> {
             <Toggle label="Sound" checked={settings.soundOn} onChange={(v) => setSettings(s => ({...s, soundOn: v}))} />
             <Toggle label="Desktop notifications" checked={settings.notificationsOn} onChange={(v) => setSettings(s => ({...s, notificationsOn: v}))} />
 
-            <div className="col-span-2 text-xs text-slate-500">
+            <div className="col-span-2 text-xs text-extraLightGray">
               Tip: Keep this tab open for notifications. You can tweak durations while running — we keep your current progress.
             </div>
           </div>
@@ -372,10 +372,10 @@ export const Pomodoro = ()=> {
 function NumberField({ label, value, onChange }) {
   return (
     <label className="flex flex-col gap-1 text-sm">
-      <span className="text-slate-600">{label}</span>
+      <span className="text-myWhite">{label}</span>
       <input
         type="number"
-        className="px-3 py-2 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-500"
+        className="px-3 py-2 rounded-xl border border-extraLightGray bg-darkerBlue text-myWhite outline-none focus:ring-2 focus:ring-brightBlue"
         value={value}
         min={1}
         max={180}
@@ -387,13 +387,13 @@ function NumberField({ label, value, onChange }) {
 
 function Toggle({ label, checked, onChange }) {
   return (
-    <label className="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-2">
-      <span className="text-sm text-slate-700">{label}</span>
+    <label className="flex items-center justify-between rounded-xl border border-extraLightGray px-3 py-2">
+      <span className="text-sm text-myWhite">{label}</span>
       <button
         type="button"
         onClick={() => onChange(!checked)}
         aria-pressed={checked}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${checked ? "bg-blue-600" : "bg-slate-300"}`}
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${checked ? "bg-brightBlue" : "bg-extraLightGray"}`}
       >
         <span
           className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${checked ? "translate-x-6" : "translate-x-1"}`}
@@ -407,7 +407,7 @@ function ModePill({ current, setMode }) {
   const mk = (m, label) => (
     <button
       key={m}
-      className={`px-3 py-1.5 rounded-xl text-sm ${current === m ? "bg-blue-600 text-white" : "bg-slate-100 hover:bg-slate-200"}`}
+      className={`px-3 py-1.5 rounded-xl text-sm ${current === m ? "bg-brightBlue text-myWhite" : "bg-darkerBlue hover:bg-extraLightGray text-myWhite"}`}
       onClick={() => setMode(m)}
     >
       {label}
