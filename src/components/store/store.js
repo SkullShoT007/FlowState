@@ -3,6 +3,7 @@ import { taskReducer } from "./taskSlice";
 import { habitReducer } from "./habitSlice";
 import { xpReducer } from "./xpSlice";
 import { xpPersistenceMiddleware } from "./xpPersistenceMiddleware";
+import { dataSyncMiddleware } from "./dataSyncMiddleware";
 import { pomodoroReducer } from "./pomodoroSlice";
 
 export const store = configureStore({
@@ -18,5 +19,5 @@ export const store = configureStore({
                 // Ignore these action types in serializability check
                 ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
             },
-        }).concat(xpPersistenceMiddleware)
+        }).concat(xpPersistenceMiddleware, dataSyncMiddleware)
 })

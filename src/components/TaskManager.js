@@ -1,7 +1,6 @@
 import { TaskCard } from "./TaskCard";
 import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { XpBar } from "./XpBar";
 import { add, setTasks } from "./store/taskSlice";
 
 import { addToDB, getTasks } from "./indexedDB/TaskDB";
@@ -17,6 +16,7 @@ function arrayMove(array, from, to) {
 }
 
 export const TaskManager = () => {
+  const audioRef = useRef(null);
   const taskList = useSelector((state) => state.taskState.taskList);
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
@@ -48,7 +48,7 @@ export const TaskManager = () => {
 
   function taskSubmit(event) {
     event.preventDefault();
-
+    audioRef.current.play();
     const title = titleRef.current.value;
     const diff = typeRef.current.value;
 
@@ -68,7 +68,7 @@ export const TaskManager = () => {
 
   return (
     <div className="bg-mainGray p-8 text-myWhite">
-      
+      <audio ref={audioRef} src="./audio/positive.mp3" />
 
       <div className="w-80 p-2 bg-darkGray rounded">
         
@@ -88,7 +88,7 @@ export const TaskManager = () => {
               expanded ? "h-16" : "h-10"
             }`}
             type="text"
-            placeholder="enter habit"
+            placeholder="enter Task"
           />
 
           {expanded && (

@@ -1,5 +1,5 @@
 import db from "./indexedDB"
-
+import { syncIndexedDBToFirebase } from "../../firebase/firebase_sync";
 export async function addToDB(habit) {
   try {
     await db.transaction('rw', db.habits, async () => {
@@ -13,6 +13,7 @@ export async function addToDB(habit) {
 
       const allHabits = await db.habits.toArray();
       console.log("Current habits in DB:", allHabits);
+      syncIndexedDBToFirebase()
     });
   } catch (error) {
     console.error("Failed to add habit:", error);
@@ -37,6 +38,7 @@ export async function deleteFromDB(id) {
 
     const updatedHabits = await db.habits.toArray();
     console.log("Remaining habits:", updatedHabits);
+    syncIndexedDBToFirebase()
   } catch (error) {
     console.error("Failed to delete habit:", error);
   }
@@ -46,6 +48,7 @@ export async function updateHabitInDB(updatedHabit) {
   try {
     await db.habits.put(updatedHabit); // If id exists → updates, else → adds
     console.log("Habit updated in IndexedDB:", updatedHabit);
+    syncIndexedDBToFirebase()
   } catch (error) {
     console.error("Failed to update habit:", error);
   }

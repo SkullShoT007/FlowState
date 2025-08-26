@@ -1,5 +1,5 @@
 import db from './indexedDB.js';
-
+import { syncIndexedDBToFirebase } from "../../firebase/firebase_sync";
 // XP Database operations
 export class XpDB {
   // Save XP data to IndexedDB
@@ -16,6 +16,7 @@ export class XpDB {
       
       await db.xp.put(xpRecord);
       console.log('XP data saved to IndexedDB:', xpRecord);
+      syncIndexedDBToFirebase()
       return xpRecord;
     } catch (error) {
       console.error('Error saving XP data to IndexedDB:', error);

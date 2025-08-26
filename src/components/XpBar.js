@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { useXpPersistence } from "./hooks/useXpPersistence";
 
 export const XpBar = () => {
-    const { xpState, getLevelProgress, getXpToNextLevel, saveXpData, resetXpData } = useXpPersistence();
+    const { xpState, getLevelProgress, getXpToNextLevel } = useXpPersistence();
     const { experience: xp, level, nextLevelXp, totalxp } = xpState;
     const percent = getLevelProgress();
     const xpToNext = getXpToNextLevel();
@@ -26,27 +26,8 @@ export const XpBar = () => {
     </div>
     <h1>Total XP: {totalxp}</h1>
     
-    {/* Development/Admin Controls */}
-    <div className="flex gap-2 mt-4">
-        <button 
-            onClick={saveXpData}
-            className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
-            title="Manually save XP data to IndexedDB"
-        >
-            Save XP
-        </button>
-        <button 
-            onClick={() => {
-                if (window.confirm('Are you sure you want to reset all XP data? This cannot be undone.')) {
-                    resetXpData();
-                }
-            }}
-            className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600"
-            title="Reset all XP data"
-        >
-            Reset XP
-        </button>
-    </div>
+    
+    
     </>
     
   )

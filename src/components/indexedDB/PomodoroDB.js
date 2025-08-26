@@ -1,5 +1,5 @@
 import db from './indexedDB.js';
-
+import { syncIndexedDBToFirebase } from '../../firebase/firebase_sync.js';
 // Pomodoro Sessions Database operations
 export class PomodoroDB {
   // Add a pomodoro session record
@@ -24,6 +24,7 @@ export class PomodoroDB {
 
       const id = await db.pomodoroSessions.add(record);
       return { id, ...record };
+      syncIndexedDBToFirebase()
     } catch (error) {
       console.error('Error adding Pomodoro session to IndexedDB:', error);
       throw error;
@@ -51,6 +52,7 @@ export class PomodoroDB {
   static async clearSessions() {
     try {
       await db.pomodoroSessions.clear();
+      syncIndexedDBToFirebase()
     } catch (error) {
       console.error('Error clearing Pomodoro sessions:', error);
       throw error;

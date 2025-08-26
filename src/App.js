@@ -1,15 +1,19 @@
 import './App.css';
 
 import { Sidebar } from './components/Sidebar';
+import { AIAgentSidebar } from './components/AIAgentSidebar';
 import { AllRoutes } from './components/routes/AllRoutes';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import db from './components/indexedDB/indexedDB';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHabits } from './components/store/habitSlice';
 import { getHabits } from './components/indexedDB/HabitDB';
+import { startAutoSync, syncDataToServer } from './components/indexedDB/dataSync';
+
 function App() {
   const dispatch = useDispatch();
   const habits = useSelector(state => state.habitState.habitList);
+  const [isAIAgentOpen, setIsAIAgentOpen] = useState(false);
 
   useEffect(() => {
     async function runDailyReset() {
@@ -43,10 +47,30 @@ function App() {
     runDailyReset();
   }, []);
 
+  // Set up data sync for AI agent
+  useEffect(() => {
+    // Initial sync when app loads
+    syncDataToServer().catch(console.error);
+    
+    // Start periodic syncing (every 30 seconds)
+    const stopAutoSync = startAutoSync('http://localhost:8000', 30000);
+    
+    // Cleanup function to stop syncing when component unmounts
+    return () => {
+      stopAutoSync();
+    };
+  }, []);
+
   return (
     <div className="App flex bg-lightGray">
-      <Sidebar  />
+      <Sidebar />
+      <div className="flex-1">
         <AllRoutes />
+      </div>
+      <AIAgentSidebar 
+        isOpen={isAIAgentOpen} 
+        onToggle={() => setIsAIAgentOpen(!isAIAgentOpen)} 
+      />
     </div>
   );
 }

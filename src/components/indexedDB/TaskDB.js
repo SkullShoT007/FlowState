@@ -1,5 +1,5 @@
 import db from "./indexedDB"
-
+import { syncIndexedDBToFirebase } from "../../firebase/firebase_sync";
 export async function addToDB(task) {
   try {
     await db.transaction('rw', db.tasks, async () => {
@@ -12,6 +12,7 @@ export async function addToDB(task) {
       });
 
       const allTasks = await db.tasks.toArray();
+      syncIndexedDBToFirebase()
       console.log("Current tasks in DB:", allTasks);
     });
   } catch (error) {
@@ -37,6 +38,7 @@ export async function deleteFromDB(id) {
 
     const updatedTasks = await db.tasks.toArray();
     console.log("Remaining tasks:", updatedTasks);
+    syncIndexedDBToFirebase()
   } catch (error) {
     console.error("Failed to delete task:", error);
   }
@@ -46,6 +48,7 @@ export async function updateTaskInDB(updatedTask) {
   try {
     await db.tasks.put(updatedTask); // If id exists → updates, else → adds
     console.log("Task updated in IndexedDB:", updatedTask);
+    syncIndexedDBToFirebase()
   } catch (error) {
     console.error("Failed to update task:", error);
   }
