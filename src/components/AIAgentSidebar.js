@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase/config';
 import { syncDataToServer } from './indexedDB/dataSync';
 import { askGemini } from '../firebase/AiService';
 export const AIAgentSidebar = ({ isOpen, onToggle }) => {
@@ -7,13 +9,21 @@ export const AIAgentSidebar = ({ isOpen, onToggle }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [, setThreadId] = useState(null);
   const messagesEndRef = useRef(null);
-
+  const [isAuth, setIsAuth] = useState(false)
   // 🔹 Ref for sidebar
   const sidebarRef = useRef(null);
 
   // Sync data when component mounts
   useEffect(() => {
     syncDataToServer().catch(console.error);
+  }, []);
+
+  // Keep isAuth in sync with Firebase auth state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setIsAuth(Boolean(currentUser));
+    });
+    return () => unsubscribe();
   }, []);
 
   // Scroll to bottom of messages
@@ -198,7 +208,9 @@ export const AIAgentSidebar = ({ isOpen, onToggle }) => {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-darkBlue">
+          {isAuth?
+           (<>
+           <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-darkBlue">
             {messages.length === 0 && (
               <div className="text-center text-gray-500 mt-4">
                 <p className="text-sm mb-2">Welcome to your AI Assistant!</p>
@@ -260,6 +272,12 @@ export const AIAgentSidebar = ({ isOpen, onToggle }) => {
               </button>
             </div>
           </div>
+          </>): (<div className='text-center bg-dullBlue text-white p-4 h-full flex items-center justify-center'>
+            <h1>Please login to use the AI Assistant</h1>
+          </div>)
+          
+          }
+          
         </div>
       </div>
     </>
