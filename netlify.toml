@@ -1,7 +1,7 @@
 [build]
   command = "npm run build"
   publish = "build"
-  functions = "netlify/functions"   # 👈 tells Netlify where your functions are
+  functions = "src/netlify/functions"   # 👈 tells Netlify where your functions are
 
 [build.environment]
   # Tell Netlify to ignore Firebase config (safe to be public)

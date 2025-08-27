@@ -1,4 +1,4 @@
-export async function handler(event, context) {
+exports.handler = async function(event, context) {
   try {
     const { prompt } = JSON.parse(event.body);
 
@@ -11,19 +11,35 @@ export async function handler(event, context) {
     }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: prompt }],
+            },
+          ],
         }),
       }
     );
 
-    const data = await response.json();
+    const text = await response.text();
+    const data = (() => {
+      try { return JSON.parse(text); } catch { return { raw: text }; }
+    })();
+
+    if (!response.ok) {
+      console.error("Gemini API error", { status: response.status, data });
+      return {
+        statusCode: response.status,
+        body: JSON.stringify({ error: data?.error?.message || "Gemini API request failed", status: response.status }),
+      };
+    }
 
     return {
       statusCode: 200,
