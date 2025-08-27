@@ -33,7 +33,10 @@ If the user asks for help with productivity, reference their data to give person
 If the user asks for specific data, give them the specific data.
 Keep responses short, supportive, and action-focused. Now answer the following question: ${prompt} based on this data ${userData}`;
 
-    const response = await fetch("/.netlify/functions/gemini", {
+    const isLocal = typeof window !== "undefined" && window.location.hostname === "localhost";
+    const functionsBase = process.env.NODE_ENV === "development" && isLocal ? "http://localhost:8888" : "";
+
+    const response = await fetch(`${functionsBase}/.netlify/functions/gemini`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt: systemPrompt })
