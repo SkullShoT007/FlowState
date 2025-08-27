@@ -301,8 +301,8 @@ export const Pomodoro = ()=> {
   const dash = Math.max(0, Math.min(circumference, circumference * progress));
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-darkBlue p-6">
-      <div className="w-full max-w-xl rounded-2xl bg-dullBlue shadow p-6">
+    <div className="h-full w-full flex items-center justify-center bg-darkBlue p-6">
+      <div className="w-full max-w-xl rounded-2xl bg-dullBlue shadow p-6 mt-10">
         <div className="flex items-center justify-between gap-2 mb-4">
           <div className="text-xl font-semibold text-myWhite">Pomodoro</div>
           <div className="flex items-center gap-2">
