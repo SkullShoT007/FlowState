@@ -1,12 +1,11 @@
 import { TaskManager } from "./TaskManager"
-import { Sidebar } from "./Sidebar"
+// import { Sidebar } from "./Sidebar"
 import { HabitManager } from "./HabitManager";
-import { useState } from "react";
-import { XpBar } from "./XpBar";
-import { Header } from "./Header";
+// import { useState } from "react";
+// import { XpBar } from "./XpBar";
+// import { Header } from "./Header";
 
 export const Home = () => {
-  const [btn, setBtn] = useState(true)
   return (
     <main className="flex w-full text-myWhite justify-evenly mt-10">
         

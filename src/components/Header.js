@@ -59,7 +59,7 @@ export const Header = () => {
       setUser({})
      
     }
-    console.log(user)
+    
   return (
     <div className="bg-dullBlue p-5 flex gap-10">
       <div className="relative w-40 h-40 cursor-pointer" onClick={() => setIsFrameModalOpen(true)} title="Customize frame">

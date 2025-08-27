@@ -14,9 +14,7 @@ export const useXpPersistence = () => {
     useEffect(() => {
         const loadXpData = async () => {
             try {
-                console.log('Loading XP data from IndexedDB...');
                 await dispatch(loadXpFromDB()).unwrap();
-                console.log('XP data loaded successfully');
             } catch (error) {
                 console.error('Failed to load XP data:', error);
             }
@@ -29,7 +27,6 @@ export const useXpPersistence = () => {
     const saveXpData = async () => {
         try {
             await dispatch(saveXpToDB(xpState)).unwrap();
-            console.log('XP data manually saved to IndexedDB');
             return true;
         } catch (error) {
             console.error('Failed to manually save XP data:', error);
@@ -41,7 +38,6 @@ export const useXpPersistence = () => {
     const resetXpData = async () => {
         try {
             await dispatch(clearXpFromDB()).unwrap();
-            console.log('XP data reset successfully');
             return true;
         } catch (error) {
             console.error('Failed to reset XP data:', error);

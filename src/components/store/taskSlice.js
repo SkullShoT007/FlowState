@@ -22,8 +22,6 @@ const taskslice = createSlice({
         },
         update(state, action) {
             const updatedTask = action.payload;
-            console.log("Reducer received update:", updatedTask.id);
-            console.log("Current state IDs:", state.taskList.map(t => t.id));
 
             state.taskList = state.taskList.map(task => {
                 if (task.id === updatedTask.id) {

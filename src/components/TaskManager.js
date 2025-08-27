@@ -61,7 +61,6 @@ export const TaskManager = () => {
 
     addToDB(task);
     dispatch(add(task));
-    console.log(task);
 
     titleRef.current.value = "";
   }

@@ -1,7 +1,7 @@
 import { HabitCard } from "./HabitCard";
 import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { XpBar } from "./XpBar";
+// import { XpBar } from "./XpBar";
 import { add, setHabits } from "./store/habitSlice";
 import { addToDB, getHabits } from "./indexedDB/HabitDB";
 import { closestCorners, DndContext } from "@dnd-kit/core";
@@ -58,7 +58,6 @@ export const HabitManager = () => {
 
     addToDB(habit);
     dispatch(add(habit));
-    console.log(habit);
 
     titleRef.current.value = "";
   }

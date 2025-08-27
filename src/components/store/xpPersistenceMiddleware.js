@@ -25,7 +25,6 @@ export const xpPersistenceMiddleware = (store) => (next) => (action) => {
             console.error('Failed to save XP data to IndexedDB:', error);
         });
         
-        console.log('XP state saved to IndexedDB after action:', action.type);
 
         // Also append a snapshot to xpHistory for progression chart
         if (db && db.xpHistory) {

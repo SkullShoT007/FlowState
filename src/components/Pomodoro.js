@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { addPomodoroSessionToDB, loadAllPomodoroSessions } from "./store/pomodoroSlice";
 
@@ -80,110 +80,18 @@ export const Pomodoro = ()=> {
   const audioRef = useRef(null);
   const sessionStartRef = useRef(null);
 
-  // Prepare total for the current mode (for progress ring)
-  const totalMs = useMemo(() => durationFor(mode, settings), [mode, settings]);
-  const progress = 1 - remainingMs / totalMs; // 0..1
-
-  // Persist state
-  useEffect(() => {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ settings, mode, remainingMs, cycle })
-    );
-  }, [settings, mode, remainingMs, cycle]);
-
-  // Accurate timer: compute remaining from endTime
-  useEffect(() => {
-    if (!isRunning) return;
-
-    // initialize end time if starting from pause
-    if (!endTimeRef.current) {
-      endTimeRef.current = Date.now() + remainingMs;
-    }
-
-    const loop = () => {
-      const now = Date.now();
-      const left = Math.max(0, endTimeRef.current - now);
-      setRemainingMs(left);
-      if (left <= 0) {
-        clearInterval(tickRef.current);
-        tickRef.current = null;
-        endTimeRef.current = null;
-        handleComplete();
-      }
-    };
-
-    // tick ~4 times/sec for smooth progress without battery drain
-    tickRef.current = setInterval(loop, 250);
-    return () => {
-      if (tickRef.current) clearInterval(tickRef.current);
-      tickRef.current = null;
-    };
-  }, [isRunning]);
-
-  // Load saved sessions once when Pomodoro mounts
-  useEffect(() => {
-    dispatch(loadAllPomodoroSessions());
-  }, [dispatch]);
-
-  // Update document title
-  useEffect(() => {
-    document.title = `${mmss(remainingMs)} — ${mode === "focus" ? "Focus" : mode === "short" ? "Short Break" : "Long Break"}`;
-  }, [remainingMs, mode]);
-
-  // Notification permission request (lazy)
-  useEffect(() => {
-    if (settings.notificationsOn && "Notification" in window && Notification.permission === "default") {
-      Notification.requestPermission().catch(() => {});
-    }
-  }, [settings.notificationsOn]);
-
-  // Sound element
-  useEffect(() => {
-    audioRef.current = new Audio(
-      "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQAA..." // very short silent-safe placeholder; replace with your own beep if desired
-    );
-  }, []);
-
-  const start = () => {
-    if (isRunning) return;
-    endTimeRef.current = Date.now() + remainingMs;
-    setIsRunning(true);
-    // Mark the session start timestamp if starting fresh
-    if (!sessionStartRef.current) {
-      const elapsed = durationFor(mode, settings) - remainingMs;
-      sessionStartRef.current = new Date(Date.now() - Math.max(0, elapsed));
-    }
-  };
-
-  const pause = () => {
-    setIsRunning(false);
-    endTimeRef.current = null;
-  };
-
-  const reset = () => {
-    pause();
-    setRemainingMs(durationFor(mode, settings));
-    sessionStartRef.current = null;
-  };
-
-  const skip = () => {
-    pause();
-    handleComplete(true);
-  };
-
-  const notify = (title, body) => {
+  // Define helpers before first usage to satisfy no-use-before-define
+  const notify = useCallback((title, body) => {
     try {
       if (settings.notificationsOn && "Notification" in window && Notification.permission === "granted") {
         new Notification(title, { body });
       }
     } catch {}
-  };
+  }, [settings.notificationsOn]);
 
-  const beep = () => {
+  const beep = useCallback(() => {
     if (!settings.soundOn) return;
     try {
-      // WebAudio beep (no external file needed)
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const o = ctx.createOscillator();
       const g = ctx.createGain();
@@ -197,13 +105,12 @@ export const Pomodoro = ()=> {
       g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
       o.stop(ctx.currentTime + 0.45);
     } catch {}
-  };
+  }, [settings.soundOn]);
 
-  const handleComplete = (manualSkip = false) => {
+  const handleComplete = useCallback((manualSkip = false) => {
     beep();
     const justFinished = mode;
 
-    // Persist session record to Redux + IndexedDB
     try {
       const totalForMode = durationFor(justFinished, settings);
       const elapsedMs = Math.min(totalForMode, Math.max(0, totalForMode - remainingMs));
@@ -263,7 +170,100 @@ export const Pomodoro = ()=> {
     } else {
       setIsRunning(false);
     }
-  };
+  }, [beep, mode, settings, remainingMs, cycle, dispatch, notify]);
+  // Prepare total for the current mode (for progress ring)
+  const totalMs = useMemo(() => durationFor(mode, settings), [mode, settings]);
+  const progress = 1 - remainingMs / totalMs; // 0..1
+
+  // Persist state
+  useEffect(() => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ settings, mode, remainingMs, cycle })
+    );
+  }, [settings, mode, remainingMs, cycle]);
+
+  // Accurate timer: compute remaining from endTime
+  useEffect(() => {
+    if (!isRunning) return;
+
+    // initialize end time if starting from pause
+    if (!endTimeRef.current) {
+      endTimeRef.current = Date.now() + remainingMs;
+    }
+
+    const loop = () => {
+      const now = Date.now();
+      const left = Math.max(0, endTimeRef.current - now);
+      setRemainingMs(left);
+      if (left <= 0) {
+        clearInterval(tickRef.current);
+        tickRef.current = null;
+        endTimeRef.current = null;
+        handleComplete();
+      }
+    };
+
+    // tick ~4 times/sec for smooth progress without battery drain
+    tickRef.current = setInterval(loop, 250);
+    return () => {
+      if (tickRef.current) clearInterval(tickRef.current);
+      tickRef.current = null;
+    };
+  }, [isRunning, remainingMs, handleComplete]);
+
+  // Load saved sessions once when Pomodoro mounts
+  useEffect(() => {
+    dispatch(loadAllPomodoroSessions());
+  }, [dispatch]);
+
+  // Update document title
+  useEffect(() => {
+    document.title = `${mmss(remainingMs)} — ${mode === "focus" ? "Focus" : mode === "short" ? "Short Break" : "Long Break"}`;
+  }, [remainingMs, mode]);
+
+  // Notification permission request (lazy)
+  useEffect(() => {
+    if (settings.notificationsOn && "Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission().catch(() => {});
+    }
+  }, [settings.notificationsOn]);
+
+  // Sound element
+  useEffect(() => {
+    audioRef.current = new Audio(
+      "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQAA..." // very short silent-safe placeholder; replace with your own beep if desired
+    );
+  }, []);
+
+  const start = useCallback(() => {
+    if (isRunning) return;
+    endTimeRef.current = Date.now() + remainingMs;
+    setIsRunning(true);
+    // Mark the session start timestamp if starting fresh
+    if (!sessionStartRef.current) {
+      const elapsed = durationFor(mode, settings) - remainingMs;
+      sessionStartRef.current = new Date(Date.now() - Math.max(0, elapsed));
+    }
+  }, [isRunning, remainingMs, mode, settings]);
+
+  const pause = useCallback(() => {
+    setIsRunning(false);
+    endTimeRef.current = null;
+  }, []);
+
+  const reset = useCallback(() => {
+    pause();
+    setRemainingMs(durationFor(mode, settings));
+    sessionStartRef.current = null;
+  }, [pause, mode, settings]);
+
+  const skip = useCallback(() => {
+    pause();
+    handleComplete(true);
+  }, [pause, handleComplete]);
+
+  // removed duplicate later definitions
 
   const setMinutes = (k, v) => {
     const n = Math.max(1, Math.min(180, Number(v) || 0));
@@ -291,7 +291,7 @@ export const Pomodoro = ()=> {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isRunning, remainingMs, settings, mode, cycle]);
+  }, [isRunning, start, pause, reset, skip]);
 
   // Progress ring geometry
   const size = 220;

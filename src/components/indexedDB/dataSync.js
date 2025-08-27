@@ -1,6 +1,6 @@
 import db from './indexedDB';
-import { getTasks } from './TaskDB';
-import { getHabits } from './HabitDB';
+// import { getTasks } from './TaskDB';
+// import { getHabits } from './HabitDB';
 import { XpDB } from './XpDB';
 import { PomodoroDB } from './PomodoroDB';
 
@@ -11,20 +11,16 @@ export async function exportAllData() {
     
     // Get tasks directly from IndexedDB
     data.tasks = await db.tasks.toArray();
-    console.log('Exporting tasks from IndexedDB:', data.tasks);
     
     // Get habits directly from IndexedDB
     data.habits = await db.habits.toArray();
-    console.log('Exporting habits from IndexedDB:', data.habits);
     
     // Get XP data
     const xpData = await XpDB.loadXpData();
     data.xp = [xpData];
-    console.log('Exporting XP data from IndexedDB:', data.xp);
     
     // Get Pomodoro sessions
     data.pomodoroSessions = await PomodoroDB.getAllSessions();
-    console.log('Exporting Pomodoro sessions from IndexedDB:', data.pomodoroSessions);
     
     // Get habit history
     data.habitHistory = await db.habitHistory.toArray();
@@ -60,7 +56,6 @@ export async function syncDataToServer(serverUrl = 'http://localhost:8000') {
     }
     
     const result = await response.json();
-    console.log('Data synced to server:', result);
     return result;
   } catch (error) {
     console.error('Error syncing data to server:', error);
@@ -89,7 +84,6 @@ export async function getSyncedData(serverUrl = 'http://localhost:8000') {
 export async function autoSyncData(serverUrl = 'http://localhost:8000') {
   try {
     await syncDataToServer(serverUrl);
-    console.log('Auto-sync completed successfully');
   } catch (error) {
     console.error('Auto-sync failed:', error);
   }
@@ -104,6 +98,5 @@ export function startAutoSync(serverUrl = 'http://localhost:8000', intervalMs = 
   // Return function to stop auto-sync
   return () => {
     clearInterval(intervalId);
-    console.log('Auto-sync stopped');
   };
 }

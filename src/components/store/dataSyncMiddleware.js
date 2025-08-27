@@ -42,7 +42,6 @@ function debounce(func, wait) {
 const debouncedSync = debounce(async () => {
     try {
         await syncDataToServer();
-        console.log('Data synced to server after change');
     } catch (error) {
         console.error('Failed to sync data to server:', error);
     }
@@ -55,7 +54,7 @@ export const dataSyncMiddleware = (store) => (next) => (action) => {
     
     // Check if this action should trigger a sync
     if (SYNC_ACTIONS.includes(action.type)) {
-        console.log('Data change detected, triggering sync:', action.type);
+        
         
         // For critical actions, sync immediately
         if (action.type === 'tasks/add' || action.type === 'habits/add' || 

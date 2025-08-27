@@ -15,7 +15,6 @@ export class XpDB {
       };
       
       await db.xp.put(xpRecord);
-      console.log('XP data saved to IndexedDB:', xpRecord);
       syncIndexedDBToFirebase()
       return xpRecord;
     } catch (error) {
@@ -29,7 +28,7 @@ export class XpDB {
     try {
       const xpRecord = await db.xp.get(1);
       if (xpRecord) {
-        console.log('XP data loaded from IndexedDB:', xpRecord);
+        
         return {
           experience: xpRecord.experience || 0,
           level: xpRecord.level || 0,
@@ -38,7 +37,7 @@ export class XpDB {
         };
       } else {
         // Return default XP state if no data exists
-        console.log('No XP data found in IndexedDB, using defaults');
+        
         return {
           experience: 0,
           level: 0,
@@ -62,7 +61,6 @@ export class XpDB {
   static async clearXpData() {
     try {
       await db.xp.clear();
-      console.log('XP data cleared from IndexedDB');
     } catch (error) {
       console.error('Error clearing XP data from IndexedDB:', error);
       throw error;
@@ -113,7 +111,6 @@ export class XpDB {
       };
       
       await db.xp.put(xpRecord);
-      console.log('XP data imported successfully:', xpRecord);
       return xpRecord;
     } catch (error) {
       console.error('Error importing XP data:', error);

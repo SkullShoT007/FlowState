@@ -11,8 +11,7 @@ export async function addToDB(habit) {
         completed: habit.completed
       });
 
-      const allHabits = await db.habits.toArray();
-      console.log("Current habits in DB:", allHabits);
+      await db.habits.toArray();
       syncIndexedDBToFirebase()
     });
   } catch (error) {
@@ -23,7 +22,6 @@ export async function addToDB(habit) {
 export async function getHabits() {
   try {
     const habits = await db.habits.toArray();
-    console.log("All habits:", habits);
     return habits;
   } catch (error) {
     console.error("Failed to fetch habits:", error);
@@ -34,10 +32,9 @@ export async function getHabits() {
 export async function deleteFromDB(id) {
   try {
     await db.habits.delete(id);
-    console.log(`Habit with id ${id} deleted.`);
+    
 
-    const updatedHabits = await db.habits.toArray();
-    console.log("Remaining habits:", updatedHabits);
+    await db.habits.toArray();
     syncIndexedDBToFirebase()
   } catch (error) {
     console.error("Failed to delete habit:", error);
@@ -47,7 +44,7 @@ export async function deleteFromDB(id) {
 export async function updateHabitInDB(updatedHabit) {
   try {
     await db.habits.put(updatedHabit); // If id exists → updates, else → adds
-    console.log("Habit updated in IndexedDB:", updatedHabit);
+    
     syncIndexedDBToFirebase()
   } catch (error) {
     console.error("Failed to update habit:", error);

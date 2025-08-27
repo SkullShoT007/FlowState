@@ -5,7 +5,7 @@ export const AIAgentSidebar = ({ isOpen, onToggle }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [threadId, setThreadId] = useState(null);
+  const [, setThreadId] = useState(null);
   const messagesEndRef = useRef(null);
 
   // 🔹 Ref for sidebar

@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { useXpPersistence } from "./hooks/useXpPersistence";
 
 export const XpBar = () => {

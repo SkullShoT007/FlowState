@@ -46,7 +46,7 @@ function App() {
       }
     }
     runDailyReset();
-  }, []);
+  }, [dispatch, habits]);
 
   // Set up data sync for AI agent
   useEffect(() => {

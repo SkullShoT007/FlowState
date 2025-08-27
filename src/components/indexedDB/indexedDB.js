@@ -43,6 +43,7 @@ db.version(5).stores({
   appMeta: "key"
 });
 
+// eslint-disable-next-line no-unused-vars
 async function exportIndexedDBData(dbName) {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(dbName);
@@ -58,10 +59,12 @@ async function exportIndexedDBData(dbName) {
         const store = transaction.objectStore(storeName);
         const getAllReq = store.getAll();
 
+        // eslint-disable-next-line no-loop-func
         getAllReq.onsuccess = () => {
           exportData[storeName] = getAllReq.result;
 
-          if (--storesToProcess === 0) {
+          storesToProcess -= 1;
+          if (storesToProcess === 0) {
             const jsonData = JSON.stringify(exportData, null, 2);
             // Download JSON file
             const blob = new Blob([jsonData], { type: "application/json" });

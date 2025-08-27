@@ -10,8 +10,8 @@ import {CSS} from "@dnd-kit/utilities"
 export const HabitCard = ({habit}) => {
   const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id: habit.id})
   const style = {
-    
-    transform: CSS.Transform.toString(transform)
+    transform: CSS.Transform.toString(transform),
+    transition
   }
   const [complete, setComplete] = useState(habit.completed || false)
   
@@ -40,24 +40,7 @@ export const HabitCard = ({habit}) => {
     }
 
   }
-  function markNotCompleted()
-  {
-    setComplete(!complete)
-    if(habit.type === 'good')
-    {
-      dispatch(GoodHabit({xp: -50}))
-      dispatch(update({ ...habit, completed: false }));
-      updateHabitInDB({...habit, completed: false})
-      HabitHistoryDB.recordCompletion({ habitId: habit.id, status: false }).catch(()=>{})
-    }
-    else if(habit.type === 'bad')
-    {
-      dispatch(BadHabit({xp:50}))
-      dispatch(update({ ...habit, completed: false }));
-      updateHabitInDB({...habit, completed: false})
-      HabitHistoryDB.recordCompletion({ habitId: habit.id, status: false }).catch(()=>{})
-    }
-  }
+  
 
 
   function handleDelete()

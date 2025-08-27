@@ -12,10 +12,8 @@ const getUserData = async (uid) => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      console.log("User data:", docSnap.data());
       return docSnap.data();
     } else {
-      console.log("No such user found!");
       return null;
     }
   } catch (error) {
@@ -31,7 +29,6 @@ export async function askGemini(prompt) {
   try {
     const uid = localStorage.getItem("uid");
     const userData = JSON.stringify(await getUserData(uid), null, 2);
-    console.log("this is user Data", userData) // Replace with actual user ID
 
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const systemPrompt = `

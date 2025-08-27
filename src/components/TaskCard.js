@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { remove, update } from "./store/taskSlice";
-import {completeTask, notCompleteTask} from "./store/xpSlice"
+import {completeTask} from "./store/xpSlice"
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
 import { deleteFromDB, updateTaskInDB } from "./indexedDB/TaskDB";
@@ -9,32 +9,23 @@ import {CSS} from "@dnd-kit/utilities"
 export const TaskCard = ({task}) => {
   const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id: task.id})
   const style = {
-    
-    transform: CSS.Transform.toString(transform)
+    transform: CSS.Transform.toString(transform),
+    transition
   }
   const [complete, setComplete] = useState(task.completed | false)
   
   const dispatch = useDispatch()
   const titleRef = useRef()
-    const descRef = useRef()
     
   function markCompleted()
   {
     setComplete(!complete)
     dispatch(completeTask(task))
-    console.log(task)
     dispatch(update({ ...task, completed: true }));
     updateTaskInDB({...task, completed: true})
     
   }
-  function markNotCompleted()
-  {
-    setComplete(!complete)
-    dispatch(notCompleteTask(task))
-    dispatch(update({ ...task, completed: false }));
-    updateTaskInDB({...task, completed: false})
-
-  }
+  
 
   function handleDelete()
   {

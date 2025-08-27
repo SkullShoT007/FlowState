@@ -11,9 +11,8 @@ export async function addToDB(task) {
         completed: task.completed
       });
 
-      const allTasks = await db.tasks.toArray();
+      await db.tasks.toArray();
       syncIndexedDBToFirebase()
-      console.log("Current tasks in DB:", allTasks);
     });
   } catch (error) {
     console.error("Failed to add task:", error);
@@ -23,7 +22,6 @@ export async function addToDB(task) {
 export async function getTasks() {
   try {
     const tasks = await db.tasks.toArray();
-    console.log("All tasks:", tasks);
     return tasks;
   } catch (error) {
     console.error("Failed to fetch tasks:", error);
@@ -34,10 +32,9 @@ export async function getTasks() {
 export async function deleteFromDB(id) {
   try {
     await db.tasks.delete(id);
-    console.log(`Task with id ${id} deleted.`);
+    
 
-    const updatedTasks = await db.tasks.toArray();
-    console.log("Remaining tasks:", updatedTasks);
+    await db.tasks.toArray();
     syncIndexedDBToFirebase()
   } catch (error) {
     console.error("Failed to delete task:", error);
@@ -47,7 +44,6 @@ export async function deleteFromDB(id) {
 export async function updateTaskInDB(updatedTask) {
   try {
     await db.tasks.put(updatedTask); // If id exists → updates, else → adds
-    console.log("Task updated in IndexedDB:", updatedTask);
     syncIndexedDBToFirebase()
   } catch (error) {
     console.error("Failed to update task:", error);

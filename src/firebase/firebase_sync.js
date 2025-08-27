@@ -53,7 +53,6 @@ export async function syncIndexedDBToFirebase() {
   const appMeta = await safeReadStore('appMeta', sanitize);
 
   // Save to Firestore under user's document
-  console.log(uid)
   await setDoc(doc(firestore, "users", uid), {
     uid: uid,
     tasks,

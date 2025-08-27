@@ -22,8 +22,6 @@ const habitSlice = createSlice({
         },
         update(state, action) {
             const updatedhabit = action.payload;
-            console.log("Reducer received update:", updatedhabit.id);
-            console.log("Current state IDs:", state.habitList.map(t => t.id));
 
             state.habitList = state.habitList.map(habit => {
                 if (habit.id === updatedhabit.id) {
