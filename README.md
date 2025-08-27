@@ -1,70 +1,108 @@
-# Getting Started with Create React App
+## FlowState
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Personal productivity hub that combines Tasks, Habits, Pomodoro, XP gamification, Analytics, and an AI Assistant. Built with React, Redux Toolkit, Dexie (IndexedDB), Firebase Auth/Firestore, Recharts, and Tailwind-like utility classes.
 
-## Available Scripts
+### Features
+- Tasks and Habits with local persistence (IndexedDB via Dexie)
+- XP system with levels and history; XP persists automatically
+- Pomodoro timer with accurate countdown, auto-advance, logging, and keyboard shortcuts
+- Analytics dashboard: trends, completion, difficulty, XP progress, Pomodoro stats
+- AI Assistant sidebar powered by a Netlify Function calling Gemini, personalized with Firestore data
+- Google Sign-In; automatic sync from IndexedDB to Firestore per user
+- Daily habit reset stored in `appMeta`
 
-In the project directory, you can run:
+### Tech Stack
+- React 19, React Router, Redux Toolkit, React-Redux
+- Dexie for IndexedDB, Firebase Auth + Firestore
+- Recharts for charts
+- Netlify Functions for serverless Gemini calls
 
-### `npm start`
+### Project Structure
+- `src/components` UI and features
+  - `TaskManager`, `HabitManager`, `Pomodoro`, `analytics/*`, `AIAgentSidebar`, `Header`, `Sidebar`
+  - `routes/AllRoutes.js` main routing
+- `src/components/indexedDB/*` Dexie schema and data access (tasks, habits, xp, pomodoro, history, appMeta)
+- `src/components/store/*` Redux slices and middlewares
+- `src/firebase/*` Firebase initialization, AI service, and sync
+- `src/netlify/functions/gemini.js` Netlify serverless function
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Getting Started
+Prereqs: Node 18+, npm, a Firebase project, and an API key for Gemini.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1) Install
+```
+npm install
+```
 
-### `npm test`
+2) Environment variables
+Create `.env` in project root with:
+```
+REACT_APP_FIREBASE_API_KEY=your_key
+REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=your_project
+REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=...
+REACT_APP_FIREBASE_APP_ID=1:...:web:...
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Netlify function (server-side) env var
+GEMINI_API_KEY=your_gemini_api_key
+```
 
-### `npm run build`
+3) Run dev server
+```
+npm start
+```
+App runs at `http://localhost:3000`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Key Workflows
+- Local persistence: Redux writes to Dexie via `indexedDB/*` helpers and `xpPersistenceMiddleware`
+- Auto sync: `dataSyncMiddleware` debounces POSTing all IndexedDB data to a local server (`/sync-data`) and `firebase_sync.js` saves to Firestore when authenticated
+- Daily habit reset: `App.js` checks `appMeta.lastHabitReset` and clears `completed` each day
+- AI Assistant: `AIAgentSidebar` → `firebase/AiService.askGemini` → Netlify function `gemini.js` (Gemini API). Responses can reflect user’s Firestore data
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Pomodoro
+Single-file component with:
+- Modes: focus/short/long; auto-advance and cycles
+- Accurate countdown using end-time math (no drift)
+- Start/Pause/Reset/Skip; Space/R/S shortcuts
+- Optional sound + desktop notifications
+- Logs each session to IndexedDB and Redux, enabling analytics
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Analytics
+Located in `src/components/analytics/*` and includes:
+- Task completion and difficulty charts
+- Habit trend and type charts
+- XP radial + progress charts (persisted in `xp` and `xpHistory`)
+- Pomodoro daily and by-mode charts
 
-### `npm run eject`
+### Firebase
+- `src/firebase/config.js` initializes Firebase (Auth + Firestore) from env vars
+- Google Sign-In in `Header` component; auth state stored in `localStorage`
+- `firebase_sync.js` consolidates IndexedDB tables and writes them to `users/{uid}` in Firestore
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Optional Local Sync Server
+`dataSync.js` can POST your IndexedDB snapshot to a local server at `http://localhost:8000/sync-data` and GET from `/data`. This is optional. If unused, calls will fail harmlessly in console.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Netlify Deployment
+- `netlify.toml` sets build and functions dir: `src/netlify/functions`
+- Set `GEMINI_API_KEY` in your Netlify site Environment Variables
+- Deploy steps:
+  1. Push to GitHub
+  2. Connect repo in Netlify
+  3. Add env vars (React + `GEMINI_API_KEY`)
+  4. Trigger build
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Scripts
+```
+npm start      # run CRA dev server
+npm run build  # production build to /build
+npm test       # jest/react-testing-library (if tests added)
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Notes
+- Ensure Firestore security rules restrict access to a user’s own document
+- Replace the inline audio placeholder in `Pomodoro.js` if desired
+- Frames in `public/Frames` are used in `Header` and unlock by XP level
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### License
+MIT (or your preferred license)
