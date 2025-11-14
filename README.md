@@ -104,5 +104,4 @@ npm test       # jest/react-testing-library (if tests added)
 - Replace the inline audio placeholder in `Pomodoro.js` if desired
 - Frames in `public/Frames` are used in `Header` and unlock by XP level
 
-### License
-MIT (or your preferred license)
+
